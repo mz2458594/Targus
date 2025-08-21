@@ -48,8 +48,8 @@ public class MonitoresFactory implements ProductoFactory {
     }
 
     @Override
-    public Producto obtener(int id){
-        Monitor monitor = (Monitor) productoDAO.findById(Long.valueOf(id)).get();
+    public Producto obtener(Long id){
+        Monitor monitor = (Monitor) productoDAO.findById(id).get();
         return monitor;
     }
 }

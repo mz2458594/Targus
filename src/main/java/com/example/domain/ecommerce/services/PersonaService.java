@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.domain.ecommerce.dto.PersonaFilterDTO;
 import com.example.domain.ecommerce.dto.UserDTO;
+import com.example.domain.ecommerce.dto.request.RegistrerRequest;
 import com.example.domain.ecommerce.models.entities.Cliente;
 import com.example.domain.ecommerce.models.entities.Direccion;
 import com.example.domain.ecommerce.models.entities.Empleado;
@@ -35,14 +36,14 @@ public class PersonaService {
 
     private final DireccionService direccionService;
 
-    public void createPersona(UserDTO user, Usuario usuario) {
+    public void createPersona(RegistrerRequest user, Usuario usuario) {
         Persona persona;
 
         LocalDate fechaNacimineto = user.getFecha_nac().toLocalDate();
 
-        if (calcularEdad(fechaNacimineto) < 18) {
-            throw new RuntimeException("No se puede registrar a un empleado menor de 18 años");
-        }
+        // if (calcularEdad(fechaNacimineto) < 18) {
+        //     throw new RuntimeException("No se puede registrar a un empleado menor de 18 años");
+        // }
 
         if (user.getRol().equals("Empleado") || user.getRol().equals("Administrador")) {
 
@@ -138,9 +139,9 @@ public class PersonaService {
         TipoPersona tipo;
         try {
             tipo = personaFilterDTO.getTipo() != null ? TipoPersona.valueOf(personaFilterDTO.getTipo())
-                    : TipoPersona.Normal;
+                    : TipoPersona.Cliente;
         } catch (IllegalArgumentException | NullPointerException e) {
-            tipo = TipoPersona.Normal;
+            tipo = TipoPersona.Cliente;
         }
 
         String departamento = personaFilterDTO.getDepartamento().equals("") ? null : personaFilterDTO.getDepartamento();
@@ -148,9 +149,9 @@ public class PersonaService {
         switch (tipo) {
             case Empleado:
                 return empleadoDAO.findByFiltro(estado, departamento);
-            case Cliente:
+            case Administrador:
                 return clienteDAO.findByFiltro(estado, departamento);
-            case Normal:
+            case Cliente:
             default:
                 final Estado estadoFinal = estado;
                 List<Persona> personas = personaDAO.findByFiltro(estado, departamento);

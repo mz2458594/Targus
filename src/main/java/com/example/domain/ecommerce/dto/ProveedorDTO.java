@@ -1,5 +1,8 @@
 package com.example.domain.ecommerce.dto;
 
+import lombok.Data;
+
+@Data
 public class ProveedorDTO {
 
     private Long ruc;
@@ -13,59 +16,5 @@ public class ProveedorDTO {
     private String estado;
 
     private String comentario;
-
-    
-
-    public Long getRuc() {
-        return ruc;
-    }
-
-    public void setRuc(Long ruc) {
-        this.ruc = ruc;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public int getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(int telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getComentario() {
-        return comentario;
-    }
-
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
-    }
-
-    
-
-    
 
 }

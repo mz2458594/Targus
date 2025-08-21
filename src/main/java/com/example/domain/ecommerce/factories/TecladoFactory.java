@@ -46,8 +46,8 @@ public class TecladoFactory implements ProductoFactory {
     }
 
     @Override
-    public Producto obtener(int id){
-        Teclado teclado = (Teclado) productoDAO.findById(Long.valueOf(id)).get();
+    public Producto obtener(Long id){
+        Teclado teclado = (Teclado) productoDAO.findById(id).get();
         return teclado;
     }
 

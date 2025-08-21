@@ -37,7 +37,7 @@ public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idPedido;
+    private Long idPedido;
 
     private Timestamp fechaPedido;
 

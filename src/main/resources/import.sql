@@ -1,0 +1,72 @@
+
+-- INSERT INTO categorias (nombre, descripcion, imagen) VALUES
+-- ('Laptops', 'Portátiles de alto rendimiento para trabajo y gaming', 'https://assets2.razerzone.com/images/pnx.assets/7fb8deac5d3c73e360bc687ed62be6cf/gaming-laptops-og-image.webp'),
+-- ('Smartphones', 'Teléfonos inteligentes con tecnología de última generación', 'https://www.notebookcheck.org/fileadmin/Notebooks/News/_nc4/Apple_dominiert_Top10_meistverkaufte_Smartphones.jpg'),
+-- ('Auriculares', 'Auriculares con excelente calidad de sonido y cancelación de ruido', 'https://i.blogs.es/086109/mejores-auriculares-gaming-guia-de-compra/450_1000.jpg'),
+-- ('Monitores', 'Pantallas de alta resolución para productividad y entretenimiento', 'https://image.benq.com/is/image/benqco/monitor-all-series-kv-m?$ResponsivePreset$&fmt=png-alpha'),
+-- ('Teclados', 'Teclados mecánicos y de membrana para uso general o gaming', 'https://hiraoka.com.pe/media/mageplaza/blog/post/c/o/como_elegir_un_teclado.jpg'),
+-- ('Mouses', 'Ratones ergonómicos y precisos para oficina y videojuegos', 'https://m.media-amazon.com/images/I/61CrsCG3HAL.jpg'),
+-- ('Smartwatches', 'Relojes inteligentes con funciones deportivas y de salud', 'https://i5.walmartimages.com/seo/Smart-Watch-Fits-for-Android-and-iPhone-EEEkit-Fitness-Health-Tracker-Waterproof-Smartwatch-for-Women-Men_819cb65b-8437-4eb3-aba1-ce6513dc8d58.312f5775b50ab18c130fe5a454149fa9.jpeg'),
+-- ('Tablets', 'Tabletas versátiles para entretenimiento, estudio o trabajo', 'https://s1.elespanol.com/2022/06/03/omicrono/analisis-prueba-productos/677442516_224810343_1706x960.jpg'),
+-- ('Cámaras', 'Cámaras digitales para fotografía profesional y amateur', 'https://static.nationalgeographic.es/files/styles/image_3200/public/mm10052_20221117_399_cropped.webp?w=1600&h=900'),
+-- ('Impresoras', 'Equipos de impresión para oficina o uso personal', 'https://dasmitec.pe/wp-content/uploads/2021/10/L8180-0.jpg');
+
+-- INSERT INTO proveedores (ruc, nombre, telefono, email, comentario, estado) VALUES
+-- (20457896321, 'Proveedor Andino S.A.', 987654321, 'contacto@andino.com', 'Proveedor confiable', 'ACTIVO'),
+-- (20123456789, 'Distribuciones Norte SAC', 912345678, 'ventas@norte.com', 'Entrega puntual', 'ACTIVO'),
+-- (20987654321, 'TechLogistics SRL', 923456789, 'info@techlogistics.pe', 'Mayorista en tecnología', 'ACTIVO'),
+-- (20543219876, 'TechSolutions Perú', 934567890, 'soporte@techsolutions.pe', 'Proveedor nacional', 'ACTIVO'),
+-- (20654321987, 'Innova Tecnología SAC', 945678901, 'contacto@innova.com', 'Innovación constante', 'ACTIVO'),
+-- (20765432198, 'Importaciones del Sur', 956789012, 'ventas@delsur.com', 'Importador oficial', 'ACTIVO'),
+-- (20876543219, 'Repuestos Tecnológicos EIRL', 967890123, 'contacto@repuestos.pe', 'Repuestos certificados', 'ACTIVO'),
+-- (20987654320, 'Tecnología Global SAC', 978901234, 'ventas@tecnologiaglobal.com', 'Proveedor global', 'ACTIVO'),
+-- (20012345678, 'Soluciones Tecnológicas SRL', 989012345, 'soluciones@tecnologicas.pe', 'Especialista en hardware', 'ACTIVO'),
+-- (20198765432, 'Comercial San José', 900123456, 'comercial@sanjose.com', 'Distribuidor minorista', 'ACTIVO');
+
+-- INSERT INTO productos (nombre, descripcion, categoria_id, precio_venta, stock, imagen, proveedor_id, marca, precio_compra, codigo_barras, peso, estado) VALUES
+-- ('Laptop Lenovo ThinkPad X1', 'Ultraliviana, Intel Core i7, 16GB RAM, 512GB SSD', 1, 4500.00, 20, 'https://p3-ofp.static.pub//fes/cms/2024/07/05/05dhzg0lrtq4i0d3wxqyjjakwmbmzr331426.png', 1, 'Lenovo', 4000.00, '8412345678905', 1.13, 'ACTIVO'),
+-- ('Smartphone Samsung Galaxy S22', 'Pantalla AMOLED, 128GB, cámara triple', 2, 3200.00, 35, 'https://m.media-amazon.com/images/I/61M4ndNetDL.jpg', 2, 'Samsung', 2700.00, '8412345678912', 0.168, 'ACTIVO'),
+-- ('Auriculares Sony WH-1000XM4', 'Cancelación de ruido, bluetooth', 3, 1100.00, 50, 'https://pesonyb2c.vtexassets.com/arquivos/ids/224541/01_Product_WH-1000XM4-B.jpg?v=638632963114200000', 3, 'Sony', 900.00, '8412345678929', 0.254, 'ACTIVO'),
+-- ('Monitor LG 27" 4K', 'Pantalla UHD 3840x2160, IPS', 4, 1400.00, 25, 'https://i5.walmartimages.com/seo/LG-27-UltraGear-FHD-1ms-165Hz-Gaming-Monitor-with-AMD-FreeSync-Premium-Black-Stabilizer-1920-x-1080-27GQ40W-B_e4036b67-de28-4cab-b2d4-ba2a820d6c88.28d9140e64afac9f20c8c102a5e91468.jpeg', 4, 'LG', 1200.00, '8412345678936', 4.3, 'ACTIVO'),
+-- ('Teclado Mecánico Redragon', 'RGB, switches blue, formato completo', 5, 250.00, 70, 'https://oechsle.vteximg.com.br/arquivos/ids/7072547-1000-1000/image-378e2e14913b4c4780d566abc442d841.jpg?v=637795377043570000', 5, 'Redragon', 180.00, '8412345678943', 0.95, 'ACTIVO'),
+-- ('Mouse Logitech MX Master 3', 'Ergonómico, inalámbrico, recargable', 6, 350.00, 40, 'https://imagedelivery.net/4fYuQyy-r8_rpBpcY7lH_A/falabellaPE/119550963_01/w=1500,h=1500,fit=pad', 6, 'Logitech', 290.00, '8412345678950', 0.141, 'ACTIVO'),
+-- ('Smartwatch Apple Watch Series 8', 'GPS, salud y fitness', 7, 2000.00, 30, 'https://promart.vteximg.com.br/arquivos/ids/7734908-1000-1000/image-75df2c357c4f4e9489646cb61db6385f.jpg?v=638385224575600000', 7, 'Apple', 1700.00, '8412345678967', 0.038, 'ACTIVO'),
+-- ('Tablet iPad 10th Gen', '10.9", 64GB, Wi-Fi', 8, 2800.00, 22, 'https://mac-center.com.pe/cdn/shop/files/iPad_10th_generation_Wi-Fi_Blue_PDP_Image_Fall23_Position-1-alt__COES.jpg?v=1724311757&width=823', 8, 'Apple', 2300.00, '8412345678974', 0.481, 'ACTIVO'),
+-- ('Cámara Canon EOS M50', 'Mirrorless, 24.1MP, video 4K', 9, 3200.00, 15, 'https://http2.mlstatic.com/D_NQ_NP_636123-MLA46518818047_062021-O.webp', 9, 'Canon', 2800.00, '8412345678981', 0.387, 'ACTIVO'),
+-- ('Impresora HP LaserJet M110w', 'Impresión láser monocromática, Wi-Fi', 10, 700.00, 18, 'https://nz-media.apjonlinecdn.com/catalog/product/7/M/7MD66F-1_T1714368253.png', 10, 'HP', 600.00, '8412345678998', 3.9, 'ACTIVO');
+
+-- INSERT INTO roles (nombre, descripcion) VALUES 
+-- ('Administrador', 'Rol con acceso completo al sistema y administración de todos los recursos.'),
+-- ('Empleado', 'Rol con acceso limitado a ciertas funcionalidades según permisos específicos.'),
+-- ('Cliente', 'Rol para usuarios que compran productos en el eCommerce.');
+
+-- INSERT INTO control_comprobantes (serie, ultimo_numero, tipo, actualizacion) VALUES
+-- ('B001', 1000, 'BOLETA', NOW()),
+-- ('F001', 500, 'FACTURA', NOW());
+
+-- INSERT INTO tarifas_envios (departamento, precio_envio) VALUES 
+-- ('AMAZONAS', 22.00),
+-- ('ANCASH', 18.00),
+-- ('APURIMAC', 18.00),
+-- ('AREQUIPA', 20.00),
+-- ('AYACUCHO', 18.00),
+-- ('CAJAMARCA', 15.00),
+-- ('CALLAO', 15.00),
+-- ('CUSCO', 24.00),
+-- ('HUANCAVELICA', 18.00),
+-- ('HUANUCO', 18.00),
+-- ('ICA', 10.00),
+-- ('JUNIN', 18.00),
+-- ('LA LIBERTAD', 22.00),
+-- ('LAMBAYEQUE', 18.00),
+-- ('LIMA', 15.00),
+-- ('LORETO', 20.00),
+-- ('MADRE DE DIOS', 20.00),
+-- ('MOQUEGUA', 18.00),
+-- ('PASCO', 20.00),
+-- ('PIURA', 22.00),
+-- ('PUNO', 20.00),
+-- ('SAN MARTIN', 20.00),
+-- ('TACNA', 18.00),
+-- ('TUMBES', 18.00),
+-- ('UCAYALI', 20.00);

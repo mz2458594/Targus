@@ -25,7 +25,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable int id) {
+    public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable Long id) {
         return ResponseEntity.ok(productosService.obtenerProductoPorId(id));
     }
 
@@ -39,10 +39,8 @@ public class ProductController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Producto> updateProduct(@RequestBody @Valid ProductDTO productDTO, @PathVariable int id) {
-
         Producto producto = productosService.actualizarProducto(productDTO, id);
         return ResponseEntity.ok(producto);
-
     }
 
     @DeleteMapping("/{id}")

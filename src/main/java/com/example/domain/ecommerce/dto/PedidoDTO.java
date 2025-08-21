@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class PedidoDTO {
-    private int idPedido;
+    private Long idPedido;
     private String fechaPedido;
     private String estado;
     private double total;

@@ -12,7 +12,7 @@ import com.example.domain.ecommerce.services.ProveedorService;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/prov")
+@RequestMapping("/api/provider")
 @Slf4j
 public class ProvController {
     @Autowired

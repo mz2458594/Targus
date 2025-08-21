@@ -46,8 +46,8 @@ public class AuricularesFactory implements ProductoFactory {
     }
 
     @Override
-    public Producto obtener(int id) {
-        Auricular auricular = (Auricular) productoDAO.findById(Long.valueOf(id)).get();
+    public Producto obtener(Long id) {
+        Auricular auricular = (Auricular) productoDAO.findById(id).get();
         return auricular;
     }
 

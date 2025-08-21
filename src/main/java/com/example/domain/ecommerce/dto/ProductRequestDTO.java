@@ -1,22 +1,9 @@
 package com.example.domain.ecommerce.dto;
 
+import lombok.Data;
 
+@Data
 public class ProductRequestDTO {
-    private int id;
+    private Long id;
     private int cantidad;
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public int getCantidad() {
-        return cantidad;
-    }
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
-    }
-
-
-    
 }

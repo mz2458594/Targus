@@ -8,7 +8,7 @@ import lombok.Data;
 public class PedidoFilterDTO {
     private Date fechaInicio;
     private Date fechaFinal;
-    private Integer idResponsable;
+    private Long idResponsable;
     private String tipoPedido;
     private String estado;
     private String idProveedor;

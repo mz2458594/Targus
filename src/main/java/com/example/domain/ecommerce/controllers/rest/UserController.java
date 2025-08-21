@@ -3,6 +3,7 @@ package com.example.domain.ecommerce.controllers.rest;
 import com.example.domain.ecommerce.dto.DireccionDTO;
 import com.example.domain.ecommerce.dto.UserDTO;
 import com.example.domain.ecommerce.dto.UsuarioPersonaDTO;
+import com.example.domain.ecommerce.dto.request.RegistrerRequest;
 import com.example.domain.ecommerce.services.DireccionService;
 import com.example.domain.ecommerce.services.EmailService;
 import com.example.domain.ecommerce.services.UsuarioService;
@@ -27,27 +28,26 @@ public class UserController {
     @Autowired
     EmailService emailService;
 
-    @PutMapping("/updateDirection/{id}")
-    public ResponseEntity<?> updateDirection(
-            @PathVariable("id") int id_usuario,
-            @RequestBody DireccionDTO direccion) {
-
-        direccionService.updateDirection(direccion, id_usuario);
-
-        return ResponseEntity.ok("Dirección actualizada con éxito");
-
-    }
-
     @GetMapping("/")
     public ResponseEntity<List<UsuarioPersonaDTO>> obteneUsuarios() {
         return ResponseEntity.ok(usuarioService.listarClientesYEmpleados());
     }
 
     @PostMapping("/createUser")
-    public ResponseEntity<Usuario> createUser(@RequestBody UserDTO user) {
+    public ResponseEntity<Usuario> createUser(@RequestBody RegistrerRequest user) {
         Usuario usuario = usuarioService.createUser(user);
 
         return ResponseEntity.status(201).body(usuario);
+    }
+
+    @PutMapping("/updateDirection/{id}")
+    public ResponseEntity<?> updateDirection(
+            @PathVariable("id") int id_usuario,
+            @RequestBody DireccionDTO direccion) {
+
+        direccionService.updateDirection(direccion, id_usuario);
+        return ResponseEntity.ok("Dirección actualizada con éxito");
+
     }
 
     @DeleteMapping("/deleteUser/{id}")
@@ -73,12 +73,5 @@ public class UserController {
         return ResponseEntity.ok(exist);
 
     }
-
-    // METODOS QUE FALTAN
-
-    // enviarEmailRegistrar
-    // activar
-    // emailContraseña
-    // actualizarContraseña
 
 }

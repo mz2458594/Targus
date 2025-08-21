@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.domain.ecommerce.models.entities.Comprobante;
 import com.example.domain.ecommerce.models.entities.ControlComprobante;
-import com.example.domain.ecommerce.models.entities.Pedido;
 import com.example.domain.ecommerce.models.entities.PedidoProveedor;
 import com.example.domain.ecommerce.models.entities.Venta;
 import com.example.domain.ecommerce.models.enums.TipoComprobante;

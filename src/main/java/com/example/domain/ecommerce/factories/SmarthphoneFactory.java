@@ -50,8 +50,8 @@ public class SmarthphoneFactory implements ProductoFactory {
     }
 
     @Override
-    public Producto obtener(int id){
-        Smartphone smartphone = (Smartphone) productoDAO.findById(Long.valueOf(id)).get();
+    public Producto obtener(Long id){
+        Smartphone smartphone = (Smartphone) productoDAO.findById(id).get();
         return smartphone;
     }
 

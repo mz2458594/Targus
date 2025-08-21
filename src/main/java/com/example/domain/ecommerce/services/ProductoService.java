@@ -50,7 +50,7 @@ public class ProductoService {
         return (List<Producto>) productoDAO.findAll();
     }
 
-    public Producto obtenerProductoPorId(int id) {
+    public Producto obtenerProductoPorId(Long id) {
 
         Optional<Producto> producto = productoDAO.findById(Long.valueOf(id));
 

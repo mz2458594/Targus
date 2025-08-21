@@ -30,20 +30,14 @@ public class PersonaController {
 
     @GetMapping("/dni")
     public ResponseEntity<Boolean> dniExists(@RequestParam String dni){
-        
         boolean exist = personaService.dniExists(dni);
-
         return ResponseEntity.ok(exist);
-
     }
 
     @GetMapping("/telefono")
     public ResponseEntity<Boolean> telefonoExists(@RequestParam String telefono){
-        
         boolean exist = personaService.telefonoExists(telefono);
-
         return ResponseEntity.ok(exist);
-
     }
 
 }

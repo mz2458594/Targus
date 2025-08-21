@@ -47,8 +47,8 @@ public class TabletFactory implements ProductoFactory {
     }
 
     @Override
-    public Producto obtener(int id){
-        Tablet tablet = (Tablet) productoDAO.findById(Long.valueOf(id)).get();
+    public Producto obtener(Long id){
+        Tablet tablet = (Tablet) productoDAO.findById(id).get();
         return tablet;
     }
 

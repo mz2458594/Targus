@@ -1,9 +1,11 @@
 package com.example.domain.ecommerce.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.example.domain.ecommerce.dto.DireccionDTO;
 import com.example.domain.ecommerce.dto.UserDTO;
+import com.example.domain.ecommerce.dto.request.RegistrerRequest;
 import com.example.domain.ecommerce.models.entities.Cliente;
 import com.example.domain.ecommerce.models.entities.Direccion;
 import com.example.domain.ecommerce.models.entities.Persona;
@@ -29,11 +31,11 @@ public class DireccionService {
     @Autowired
     private final ClienteDAO clienteDAO;
 
-    public Iterable<Direccion> obtenerCategorias() {
+    public List<Direccion> obtenerDirecciones() {
         return direccionDAO.findAll();
     }
 
-    public Direccion createDirection(UserDTO user, Persona persona) {
+    public Direccion createDirection(RegistrerRequest user, Persona persona) {
         Direccion nueva_direccion = new Direccion();
         nueva_direccion.setCalle(user.getCalle());
         nueva_direccion.setDepartamento(user.getDepartamento());

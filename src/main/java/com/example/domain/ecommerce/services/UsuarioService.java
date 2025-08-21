@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import com.example.domain.ecommerce.dto.UserDTO;
 import com.example.domain.ecommerce.dto.UsuarioPersonaDTO;
+import com.example.domain.ecommerce.dto.request.RegistrerRequest;
 import com.example.domain.ecommerce.models.entities.*;
 import com.example.domain.ecommerce.models.enums.Estado;
 import com.example.domain.ecommerce.repositories.ClienteDAO;
@@ -101,7 +102,7 @@ public class UsuarioService {
         return resultado;
     }
 
-    public Usuario createUser(UserDTO user) {
+    public Usuario createUser(RegistrerRequest user) {
 
         Usuario usuario = new Usuario();
         usuario.setUsername(user.getUsername());
@@ -111,7 +112,6 @@ public class UsuarioService {
 
         usuario.setEmail(user.getCorreo());
 
-        // PARA EL AVANCE DE PROYECTO 3
         // if (validarContraseña(user.getContraseña())) {
         // usuario.setPassword(passwordEncoder.encode(user.getContraseña()));
         // }
@@ -180,9 +180,9 @@ public class UsuarioService {
         usuarioDAO.deleteById(Long.valueOf(id));
     }
 
-    public Usuario obtenerUsuarioPorId(int id) {
+    public Usuario obtenerUsuarioPorId(Long id) {
 
-        Optional<Usuario> usuario = usuarioDAO.findById(Long.valueOf(id));
+        Optional<Usuario> usuario = usuarioDAO.findById(id);
 
         if (usuario.isEmpty()) {
             throw new EntityNotFoundException("Usuario con id " + id + " no encontrado");
@@ -237,7 +237,7 @@ public class UsuarioService {
                 usuario.getUsername(),
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
 
-        emailService.sendEmailRegistrar(correo, usuario.getIdUsuario());
+        // emailService.sendEmailRegistrar(correo, usuario.getIdUsuario());
     }
 
     public void emailContraseña(String email) {
@@ -249,9 +249,9 @@ public class UsuarioService {
 
         Usuario user = usuario.get();
 
-        Email correo = new Email("mz2458594@gmail.com", email, "Recuperar Contraseña", user.getUsername(),
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
-        emailService.sendEmailTemplate(correo, user.getIdUsuario());
+        // Email correo = new Email("mz2458594@gmail.com", email, "Recuperar Contraseña", user.getUsername(),
+        //         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+        // emailService.sendEmailTemplate(correo, user.getIdUsuario());
     }
 
     public void actualizarContraseña(String contraseña, int id_usuario) {

@@ -45,8 +45,8 @@ public class MouseFactory implements ProductoFactory {
     }
 
     @Override
-    public Producto obtener(int id){
-        Mouse mouse = (Mouse) productoDAO.findById(Long.valueOf(id)).get();
+    public Producto obtener(Long id){
+        Mouse mouse = (Mouse) productoDAO.findById(id).get();
         return mouse;
     }
 }

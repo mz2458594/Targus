@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import com.example.domain.ecommerce.dto.RequestDTO;
 import com.example.domain.ecommerce.dto.VentaDTO;
-import com.example.domain.ecommerce.dto.VentaRequestDTO;
 import com.example.domain.ecommerce.models.entities.Comprobante;
 import com.example.domain.ecommerce.models.entities.Detalle_venta;
 import com.example.domain.ecommerce.models.entities.Empleado;
@@ -28,8 +27,6 @@ import com.example.domain.ecommerce.repositories.TarifaDAO;
 import com.example.domain.ecommerce.repositories.VentaEcommerceDAO;
 import com.example.domain.ecommerce.repositories.VentasDAO;
 import com.example.domain.ecommerce.repositories.VentasInventarioDAO;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

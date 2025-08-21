@@ -45,8 +45,8 @@ public class SmartWatchFactory implements ProductoFactory {
     }
 
     @Override
-    public Producto obtener(int id){
-        Smartwatch smartwatch = (Smartwatch) productoDAO.findById(Long.valueOf(id)).get();
+    public Producto obtener(Long id){
+        Smartwatch smartwatch = (Smartwatch) productoDAO.findById(id).get();
         return smartwatch;
     }
 }

@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.domain.ecommerce.dto.CategoriaDTO;
 import com.example.domain.ecommerce.models.entities.Categoria;
 import com.example.domain.ecommerce.services.CategoriaService;
 
+@RequestMapping("/api/category")
 public class CategoriaController {
     @Autowired
     private CategoriaService categoriaService;

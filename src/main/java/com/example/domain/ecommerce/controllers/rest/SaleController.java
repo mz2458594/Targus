@@ -24,7 +24,6 @@ public class SaleController {
 
     @PostMapping("/filtro")
     public ResponseEntity<List<Venta>> getVentasRango(@RequestBody VentaDTO ventaDTO){
-
         return ResponseEntity.ok(ventaService.obtenerVentasConFiltro(ventaDTO));
     }
 

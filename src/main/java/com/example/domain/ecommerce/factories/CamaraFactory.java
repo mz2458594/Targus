@@ -45,8 +45,8 @@ public class CamaraFactory implements ProductoFactory{
     }
 
     @Override
-    public Producto obtener(int id){
-        Camara camara = (Camara) productoDAO.findById(Long.valueOf(id)).get();
+    public Producto obtener(Long id){
+        Camara camara = (Camara) productoDAO.findById(id).get();
         return camara;
     }
 }

@@ -46,8 +46,8 @@ public class ImpresoraFactory implements ProductoFactory {
     }
 
     @Override
-    public Producto obtener(int id){
-        Impresora impresora = (Impresora) productoDAO.findById(Long.valueOf(id)).get();
+    public Producto obtener(Long id){
+        Impresora impresora = (Impresora) productoDAO.findById(id).get();
         return impresora;
     }
 }
