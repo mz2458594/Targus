@@ -52,6 +52,16 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String generateRefreshToken(Authentication authentication) {
+
+        return Jwts.builder()
+                .setSubject(authentication.getName())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refresh))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public List<GrantedAuthority> getAuthorities(String token) {
         List<String> roles = verifiedClaim(token).get("authorities", List.class);
 
@@ -70,13 +80,26 @@ public class JwtUtil {
     public boolean validateToken(String token, UserDetails userDetails) {
         Claims claims = verifiedClaim(token);
 
-        final String username = getEmail(token);
+        final String emailToken = getEmail(token);
 
         boolean isExpired = claims.getExpiration().before(new Date());
-        String emailToken = claims.getSubject();
 
-        return !isExpired && emailToken != null && !emailToken.trim().isEmpty()
-                && username.equals(userDetails.getUsername());
+        return !isExpired
+                && emailToken != null
+                && !emailToken.trim().isEmpty()
+                && emailToken.equals(userDetails.getUsername());
+    }
+
+    public boolean validateRefreshToken(String token) {
+        Claims claims = verifiedClaim(token);
+
+        final String emailToken = getEmail(token);
+
+        boolean isExpired = claims.getExpiration().before(new Date());
+
+        return !isExpired
+                && emailToken != null
+                && !emailToken.trim().isEmpty();
     }
 
     private Claims verifiedClaim(String token) {
