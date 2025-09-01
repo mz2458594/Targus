@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.ecommerce.dto.PersonaFilterDTO;
 import com.example.domain.ecommerce.dto.UserDTO;
@@ -36,6 +37,7 @@ public class PersonaService {
 
     private final DireccionService direccionService;
 
+    @Transactional
     public void createPersona(RegistrerRequest user, Usuario usuario) {
         Persona persona;
 
@@ -77,6 +79,7 @@ public class PersonaService {
 
     }
 
+    @Transactional
     public Persona actualizarPersona(UserDTO userDTO, Usuario usuario) {
 
         Persona persona;
@@ -122,10 +125,7 @@ public class PersonaService {
 
     }
 
-    private int calcularEdad(LocalDate fecha) {
-        return Period.between(fecha, LocalDate.now()).getYears();
-    }
-
+    @Transactional(readOnly = true)
     public List<Persona> obtenerPersonasConFiltros(PersonaFilterDTO personaFilterDTO) {
 
         Estado estado = null;
@@ -175,12 +175,18 @@ public class PersonaService {
 
     }
 
+    @Transactional(readOnly = true)
     public boolean dniExists(String dni) {
         return personaDAO.findByDni(dni).isPresent();
     }
 
+    @Transactional(readOnly = true)
     public boolean telefonoExists(String telefono) {
         return personaDAO.findByTelefono(telefono).isPresent();
+    }
+
+    private int calcularEdad(LocalDate fecha) {
+        return Period.between(fecha, LocalDate.now()).getYears();
     }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
 
 import com.example.domain.ecommerce.config.JwtUtil;
@@ -41,6 +42,7 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
 
+    @Transactional
     public AuthResponse register(RegistrerRequest registrerRequest, HttpServletResponse response) {
 
         Usuario usuario = usuarioService.createUser(registrerRequest);
@@ -63,6 +65,7 @@ public class AuthService {
 
     }
 
+    @Transactional
     public AuthResponse authentication(AuthenticationRequest authenticationRequest, HttpServletResponse response) {
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -83,6 +86,7 @@ public class AuthService {
 
     }
 
+    @Transactional
     public void refresh(HttpServletResponse response, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
 
@@ -113,13 +117,14 @@ public class AuthService {
 
     }
 
+    @Transactional
     public Persona update(UserDTO userDTO, int id) {
         Usuario usuario = usuarioService.actualizarUsuarios(userDTO, id);
 
         return personaService.actualizarPersona(userDTO, usuario);
     }
 
-    public void generateCookie(HttpServletResponse response, String name, String value, int duration) {
+    private void generateCookie(HttpServletResponse response, String name, String value, int duration) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
         cookie.setAttribute("SameSite", "None");

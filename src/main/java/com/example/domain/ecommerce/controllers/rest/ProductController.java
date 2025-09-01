@@ -1,10 +1,9 @@
 package com.example.domain.ecommerce.controllers.rest;
 
-import com.example.domain.ecommerce.dto.ProductDTO;
 import com.example.domain.ecommerce.dto.ProductFilterDTO;
+import com.example.domain.ecommerce.dto.ProductRequest;
 import com.example.domain.ecommerce.models.entities.Producto;
 import com.example.domain.ecommerce.services.ProductoService;
-
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
@@ -30,7 +29,7 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Producto> createProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<Producto> createProduct(@RequestBody ProductRequest productDTO) {
 
         Producto producto = productosService.agregarProducto(productDTO);
 
@@ -38,7 +37,7 @@ public class ProductController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Producto> updateProduct(@RequestBody @Valid ProductDTO productDTO, @PathVariable int id) {
+    public ResponseEntity<Producto> updateProduct(@RequestBody @Valid ProductRequest productDTO, @PathVariable Long id) {
         Producto producto = productosService.actualizarProducto(productDTO, id);
         return ResponseEntity.ok(producto);
     }

@@ -14,7 +14,6 @@ import com.example.domain.ecommerce.dto.request.RegistrerRequest;
 import com.example.domain.ecommerce.dto.response.AuthResponse;
 import com.example.domain.ecommerce.services.AuthService;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;

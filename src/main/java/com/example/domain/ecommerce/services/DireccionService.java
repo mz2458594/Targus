@@ -15,6 +15,7 @@ import com.example.domain.ecommerce.repositories.DireccionDAO;
 import com.example.domain.ecommerce.repositories.UsuarioDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -31,10 +32,12 @@ public class DireccionService {
     @Autowired
     private final ClienteDAO clienteDAO;
 
+    @Transactional(readOnly = true)
     public List<Direccion> obtenerDirecciones() {
         return direccionDAO.findAll();
     }
 
+    @Transactional
     public Direccion createDirection(RegistrerRequest user, Persona persona) {
         Direccion nueva_direccion = new Direccion();
         nueva_direccion.setCalle(user.getCalle());
@@ -46,6 +49,7 @@ public class DireccionService {
         return nueva_direccion;
     }
 
+    @Transactional
     public Cliente updateDirection(DireccionDTO direccion, int id) {
 
         Optional<Usuario> user = usuarioDAO.findById(Long.valueOf(id));

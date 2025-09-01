@@ -15,6 +15,7 @@ import com.example.domain.ecommerce.repositories.UsuarioDAO;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -102,6 +103,7 @@ public class UsuarioService {
         return resultado;
     }
 
+    @Transactional
     public Usuario createUser(RegistrerRequest user) {
 
         Usuario usuario = new Usuario();
@@ -142,6 +144,7 @@ public class UsuarioService {
 
     }
 
+    @Transactional
     public Usuario actualizarUsuarios(UserDTO userDTO, int id) {
 
         Usuario usuario = usuarioDAO.findById(Long.valueOf(id)).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -162,6 +165,7 @@ public class UsuarioService {
         return usuarioDAO.save(usuario);
     }
 
+    @Transactional
     public void eliminarUsuario(int id) {
         Usuario usuario = usuarioDAO.findById(Long.valueOf(id)).get();
         Optional<Empleado> empleado = empleadoDAO.findByUsuario(usuario);
@@ -180,6 +184,7 @@ public class UsuarioService {
         usuarioDAO.deleteById(Long.valueOf(id));
     }
 
+    @Transactional(readOnly = true)
     public Usuario obtenerUsuarioPorId(Long id) {
 
         Optional<Usuario> usuario = usuarioDAO.findById(id);
@@ -192,7 +197,7 @@ public class UsuarioService {
         return usuario.get();
     }
 
-    public boolean validarContraseña(String contraseña) {
+    private boolean validarContraseña(String contraseña) {
         if (contraseña.length() < 8) {
             throw new RuntimeException("La contraseña debe tener como minimo 8 caracteres");
         }
@@ -254,6 +259,7 @@ public class UsuarioService {
         // emailService.sendEmailTemplate(correo, user.getIdUsuario());
     }
 
+    @Transactional
     public void actualizarContraseña(String contraseña, int id_usuario) {
 
         Usuario usuario = usuarioDAO.findById(Long.valueOf(id_usuario))

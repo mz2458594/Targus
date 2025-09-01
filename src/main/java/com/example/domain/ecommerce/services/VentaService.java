@@ -6,7 +6,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.example.domain.ecommerce.dto.RequestDTO;
 import com.example.domain.ecommerce.dto.VentaDTO;
@@ -151,18 +150,22 @@ public class VentaService {
         return ventaGuardada;
     }
 
+    @Transactional(readOnly = true)
     public List<VentaInventario> getVentaInventario() {
         return (List<VentaInventario>) ventasInventarioDAO.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<VentaEcommerce> getVentaEcommerce() {
         return (List<VentaEcommerce>) ventaEcommerceDAO.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Venta> getVentas() {
         return (List<Venta>) ventasDAO.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Venta> obtenerVentasConFiltro(VentaDTO ventaDTO) {
 
         Timestamp fechaInicio = ventaDTO.getFechaInicio() != null ? new Timestamp(ventaDTO.getFechaInicio().getTime())

@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.domain.ecommerce.dto.EstadoRequestDTO;
 import com.example.domain.ecommerce.dto.PedidoDTO;
 import com.example.domain.ecommerce.dto.PedidoFilterDTO;
@@ -48,18 +50,22 @@ public class PedidoService {
 
     private final ProveedorDAO proveedorDAO;
 
+    @Transactional(readOnly = true)
     public List<Pedido> getPedidos() {
         return (List<Pedido>) pedidoDAO.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<PedidoProveedor> getPedidosProveedor() {
         return (List<PedidoProveedor>) pedidoProveedorDAO.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<PedidoUsuario> getPedidosUsuario() {
         return (List<PedidoUsuario>) pedidoUsuarioDAO.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Pedido obtenerPedidoPorId(int id) {
         Optional<Pedido> pedidos = pedidoDAO.findById(Long.valueOf(id));
 
@@ -70,6 +76,7 @@ public class PedidoService {
         return pedidos.get();
     }
 
+    @Transactional(readOnly = true)
     public PedidoProveedor obtenerPedidoProveedorPorId(int id) {
 
         Optional<PedidoProveedor> pedido = pedidoProveedorDAO.findById(Long.valueOf(id));
@@ -81,6 +88,7 @@ public class PedidoService {
         return pedido.get();
     }
 
+    @Transactional(readOnly = true)
     public PedidoUsuario obtenerPedidoUsuarioPorId(int id) {
         Optional<PedidoUsuario> pedido = pedidoUsuarioDAO.findById((Long.valueOf(id)));
         if (pedido.isEmpty()) {
@@ -90,6 +98,7 @@ public class PedidoService {
         return pedido.get();
     }
 
+    @Transactional(readOnly = true)
     public List<PedidoUsuario> getPedidosUsuarioPorIdUsuario(int idUsuario) {
         List<PedidoUsuario> pedidos = pedidoUsuarioDAO.obtenerPedidosPorIdUsuario(Long.valueOf(idUsuario));
 
@@ -99,45 +108,17 @@ public class PedidoService {
         return pedidos;
     }
 
-    public List<PedidoDTO> convertirPedidoDTO(List<PedidoUsuario> pedidoUsuarios) {
-        List<PedidoDTO> dtoList = new ArrayList<>();
-
-        for (PedidoUsuario pedidoUsuario : pedidoUsuarios) {
-            PedidoDTO dto = new PedidoDTO();
-            dto.setIdPedido(pedidoUsuario.getIdPedido());
-            dto.setFechaPedido(pedidoUsuario.getFechaPedido().toString());
-            dto.setEstado(pedidoUsuario.getEstado().toString());
-            dto.setTotal(pedidoUsuario.getTotal().doubleValue());
-
-            List<PedidoDTO.DetalleDTO> detallePedidos = new ArrayList<>();
-            for (DetallePedido detalle : pedidoUsuario.getDetallePedidos()) {
-                PedidoDTO.DetalleDTO detalleDTO = new PedidoDTO.DetalleDTO();
-                detalleDTO.setNombreProducto(detalle.getProducto().getNombre());
-                detalleDTO.setCantidad(detalle.getCantidad());
-                detalleDTO.setImagen(detalle.getProducto().getImagen());
-                detalleDTO.setPrecioVenta(detalle.getProducto().getPrecioVenta());
-                detalleDTO.setSubtotal(detalle.getSubtotal().doubleValue());
-
-                detallePedidos.add(detalleDTO);
-            }
-
-            dto.setDetallePedidos(detallePedidos);
-            dtoList.add(dto);
-
-        }
-
-        return dtoList;
-
-    }
-
+    @Transactional
     public Pedido crearPedidoProveedor(RequestDTO data) {
         return pedidoProveedorFactory.crearPedido(data);
     }
 
+    @Transactional
     public Pedido crearPedidoUsuario(RequestDTO data) {
         return pedidoUsuarioFactory.crearPedido(data);
     }
 
+    @Transactional
     public void deletePedido(int id) {
         Optional<PedidoProveedor> pedido = pedidoProveedorDAO.findById(Long.valueOf(id));
 
@@ -149,14 +130,17 @@ public class PedidoService {
 
     }
 
+    @Transactional
     public void actualizarEstadoProveedor(int id, EstadoRequestDTO estadoRequestDTO) {
         pedidoProveedorFactory.actualizarEstado(id, estadoRequestDTO);
     }
 
+    @Transactional
     public void actualizarEstadoUsuario(int id, EstadoRequestDTO estadoRequestDTO) {
         pedidoUsuarioFactory.actualizarEstado(id, estadoRequestDTO);
     }
 
+    @Transactional(readOnly = true)
     public List<Pedido> obtenerPedidosConFiltro(PedidoFilterDTO pedidoFilterDTO) {
 
         Timestamp fechaInicio = pedidoFilterDTO.getFechaInicio() != null

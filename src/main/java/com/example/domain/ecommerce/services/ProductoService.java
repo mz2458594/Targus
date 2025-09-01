@@ -5,27 +5,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import com.example.domain.ecommerce.dto.ProductDTO;
 import com.example.domain.ecommerce.dto.ProductFilterDTO;
-import com.example.domain.ecommerce.factories.ProductoFactory;
-import com.example.domain.ecommerce.models.entities.Auricular;
-import com.example.domain.ecommerce.models.entities.Camara;
+import com.example.domain.ecommerce.dto.ProductRequest;
 import com.example.domain.ecommerce.models.entities.Categoria;
-import com.example.domain.ecommerce.models.entities.Impresora;
-import com.example.domain.ecommerce.models.entities.Laptop;
-import com.example.domain.ecommerce.models.entities.Monitor;
-import com.example.domain.ecommerce.models.entities.Mouse;
 import com.example.domain.ecommerce.models.entities.Producto;
 import com.example.domain.ecommerce.models.entities.Proveedor;
-import com.example.domain.ecommerce.models.entities.Smartphone;
-import com.example.domain.ecommerce.models.entities.Smartwatch;
-import com.example.domain.ecommerce.models.entities.Tablet;
-import com.example.domain.ecommerce.models.entities.Teclado;
 import com.example.domain.ecommerce.models.enums.Estado;
 import com.example.domain.ecommerce.repositories.CategoriaDAO;
 import com.example.domain.ecommerce.repositories.ProductoDAO;
 import com.example.domain.ecommerce.repositories.ProveedorDAO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -40,12 +30,11 @@ public class ProductoService {
 
     private final ProveedorDAO proveedorDAO;
 
-    private final List<ProductoFactory> factories;
-
     public List<Categoria> obtenerCategorias() {
         return categoriaDAO.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Producto> listarProducto() {
         return (List<Producto>) productoDAO.findAll();
     }
@@ -58,161 +47,109 @@ public class ProductoService {
             throw new EntityNotFoundException("Producto con id " + id + " no encontrado");
         }
 
-        return factories.stream()
-                .filter(f -> f.supports(producto.get().getCategoria().getNombre()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Tipo de producto no soportado"))
-                .obtener(id);
+        return producto.get();
     }
 
-    public Map<String, String> obtenerDetalleProducto(Producto producto) {
-        Map<String, String> detalles = new LinkedHashMap<>();
-        if (producto instanceof Laptop laptop) {
-            detalles.put("Memoria RAM", laptop.getMemoriaRam());
-            detalles.put("Procesador", laptop.getProcesador());
-            detalles.put("Tarjeta Grafica", laptop.getTarjetaGrafica());
-            detalles.put("Sistema Operativo", laptop.getSistemaOperativo());
-            detalles.put("Tamaño de Pantalla", laptop.getTamañoPantalla());
-            detalles.put("Color", laptop.getColor());
-        } else if (producto instanceof Smartphone smartphone) {
+    @Transactional
+    public Producto agregarProducto(ProductRequest productRequest) {
 
-            detalles.put("Tamaño de pantalla", smartphone.getTamañoPantalla());
-            detalles.put("Memoria Ram", smartphone.getMemoriaRam());
-            detalles.put("Almacenamiento interno", smartphone.getAlmacenamientoInterno());
-            detalles.put("Resolucion de camara", smartphone.getResolucionCamara());
-            detalles.put("Capacidad de bateria", smartphone.getCapacidadBateria());
-            detalles.put("Sistemas operativo", smartphone.getSistemaOperativo());
+        Producto producto = new Producto();
 
-        } else if (producto instanceof Auricular auricular) {
-            detalles.put("Tipo", auricular.getTipo());
-            detalles.put("Duracion", auricular.getDuracion());
-            detalles.put("Cancelacion de ruido", auricular.getCancelacionRuido());
-            detalles.put("Conector", auricular.getConector());
-
-        } else if (producto instanceof Monitor monitor) {
-
-            detalles.put("Tamaño de pantalla", monitor.getTamañoPantalla());
-            detalles.put("Resolucion", monitor.getResolución());
-            detalles.put("Tipo de panel", monitor.getTipoPanel());
-            detalles.put("Frecuencia de actualizacion", monitor.getFrecuenciaActualizacion());
-            detalles.put("Puertos de entrada", monitor.getPuertosEntrada());
-
-        } else if (producto instanceof Teclado teclado) {
-
-            detalles.put("Tipo", teclado.getTipo());
-            detalles.put("Conectividad", teclado.getConectividad());
-            detalles.put("Distribucion", teclado.getDistribución());
-            detalles.put("Retroiluminacion", teclado.getRetroiluminación());
-
-        } else if (producto instanceof Mouse mouse) {
-
-            detalles.put("Tipo", mouse.getTipo());
-            detalles.put("Conectividad", mouse.getConectividad());
-            detalles.put("DPI", mouse.getDpi());
-            detalles.put("Cantidad de botones", mouse.getCantidadBotones());
-
-        } else if (producto instanceof Smartwatch smartwatch) {
-
-            detalles.put("Compatibilidad", smartwatch.getCompatibilidad());
-            detalles.put("Monitoreo de salud", smartwatch.getMonitoreoSalud());
-            detalles.put("Resistencia al agua", smartwatch.getResistenciaAgua());
-            detalles.put("Duracion", smartwatch.getDuracion());
-
-        } else if (producto instanceof Tablet tablet) {
-
-            detalles.put("Tamaño de pantalla", tablet.getTamañoPantalla());
-            detalles.put("Memoria RAM", tablet.getMemoriaRam());
-            detalles.put("Almacenamiento interno", tablet.getAlmacenamientoInterno());
-            detalles.put("Resolucion de camara", tablet.getResolucionCamara());
-            detalles.put("Sistema operativo", tablet.getSistemaOperativo());
-
-        } else if (producto instanceof Camara camara) {
-
-            detalles.put("Tipo", camara.getTipo());
-            detalles.put("Resolucion", camara.getResolución());
-            detalles.put("Zoom optico", camara.getZoomOptico());
-            detalles.put("Estabilizacion de imagen", camara.getEstabilizacionImagen());
-
-        } else if (producto instanceof Impresora impresora) {
-
-            detalles.put("Tipo", impresora.getTipo());
-            detalles.put("Funciones", impresora.getFunciones());
-            detalles.put("Conectividad", impresora.getConectividad());
-            detalles.put("Velocidad de impresion", impresora.getVelocidadImpresion());
-            detalles.put("Doble cara automatica", impresora.getDobleCaraAutomatica());
-
-        }
-
-        return detalles;
-    }
-
-    public Producto agregarProducto(ProductDTO productDTO) {
-
-        Producto producto = factories.stream()
-                .filter(f -> f.supports(productDTO.getNombre_categoria()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Tipo de producto no soportado"))
-                .crearProducto(productDTO);
-
-        Categoria categoria = categoriaDAO.findByNombre(productDTO.getNombre_categoria());
-        Proveedor proveedor = proveedorDAO.findByNombre(productDTO.getProveedor())
-                .orElseThrow(() -> new RuntimeException("Error al actualizar el producto"));
+        Categoria categoria = categoriaDAO.findByNombre(productRequest.getCategoria())
+                .orElseThrow(() -> new RuntimeException("No se encontro la categoría"));
+        Proveedor proveedor = proveedorDAO.findByNombre(productRequest.getProveedor())
+                .orElseThrow(() -> new RuntimeException("No se encontro al proveedor"));
         ;
 
         producto.setCategoria(categoria);
-        producto.setDescripcion(productDTO.getDescripcion());
-        producto.setImagen(productDTO.getImagen1());
-        producto.setNombre(productDTO.getNombre());
-        producto.setPrecioVenta(productDTO.getPrecio());
+        producto.setDescripcion(productRequest.getDescripcion());
+        producto.setImagen(productRequest.getImagen());
+        producto.setNombre(productRequest.getNombre());
+        producto.setPrecioVenta(productRequest.getPrecioVenta());
         producto.setProveedor(proveedor);
-        producto.setStock(productDTO.getStock());
-        producto.setMarca(productDTO.getMarca());
-        producto.setPrecioCompra(productDTO.getPrecioCompra());
-        producto.setPeso(Float.parseFloat(productDTO.getPeso()));
-        producto.setEstado(Estado.valueOf(productDTO.getEstado()));
+        producto.setStock(productRequest.getStock());
+        producto.setMarca(productRequest.getMarca());
+        producto.setPrecioCompra(productRequest.getPrecioCompra());
+        producto.setPeso(Float.parseFloat(productRequest.getPeso()));
+        producto.setEstado(Estado.valueOf(productRequest.getEstado()));
+        producto.setCodigoBarras(productRequest.getCodigoBarras());
 
-        if (producto.validarCodigo(productDTO.getCodigoBarras())) {
-            producto.setCodigoBarras(productDTO.getCodigoBarras());
-        } else {
-            throw new IllegalArgumentException("El codigo de barras ingresado no es válido.");
+        // EN EL FRONT VALIDAR EL FORMATO DEL NUMERO DE BARRAS
+        // if (producto.validarCodigo(productDTO.getCodigoBarras())) {
+        // producto.setCodigoBarras(productDTO.getCodigoBarras());
+        // } else {
+        // throw new IllegalArgumentException("El codigo de barras ingresado no es
+        // válido.");
+        // }
+
+        Map<String, String> detailList = new LinkedHashMap<>();
+
+        for (Map.Entry<String, String> detalle : productRequest.getDetail().entrySet()) {
+            detailList.put(detalle.getKey(), detalle.getValue());
         }
+
+        producto.setDetail(detailList);
 
         return productoDAO.save(producto);
 
     }
 
-    public Producto actualizarProducto(ProductDTO productDTO, int id) {
+    @Transactional
+    public Producto actualizarProducto(ProductRequest productRequest, Long id) {
 
-        Producto producto = factories.stream()
-                .filter(f -> f.supports(productDTO.getNombre_categoria()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Tipo de producto no soportado"))
-                .actualizar(productDTO, id);
+        Producto producto = productoDAO.findById(id).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        Categoria categoria = categoriaDAO.findByNombre(productDTO.getNombre_categoria());
-        Proveedor proveedor = proveedorDAO.findByNombre(productDTO.getProveedor())
+        Categoria categoria = categoriaDAO.findByNombre(productRequest.getCategoria())
+                .orElseThrow(() -> new RuntimeException("No se encontro la categoría"));
+        Proveedor proveedor = proveedorDAO.findByNombre(productRequest.getProveedor())
                 .orElseThrow(() -> new RuntimeException("Error al actualizar el producto"));
 
         producto.setCategoria(categoria);
-        producto.setDescripcion(productDTO.getDescripcion());
-        producto.setNombre(productDTO.getNombre());
-        producto.setPrecioVenta(productDTO.getPrecio());
         producto.setProveedor(proveedor);
-        producto.setMarca(productDTO.getMarca());
-        producto.setPrecioCompra(productDTO.getPrecioCompra());
-        producto.setPeso(Float.parseFloat(productDTO.getPeso()));
-        producto.setEstado(Estado.valueOf(productDTO.getEstado()));
 
-        if (producto.validarCodigo(productDTO.getCodigoBarras())) {
-            producto.setCodigoBarras(productDTO.getCodigoBarras());
-        } else {
-            throw new IllegalArgumentException("El codigo de barras ingresado no es válido.");
+        if (productRequest.getImagen() != null)
+            producto.setImagen(productRequest.getImagen());
+        if (productRequest.getDescripcion() != null)
+            producto.setDescripcion(productRequest.getDescripcion());
+        if (productRequest.getNombre() != null)
+            producto.setNombre(productRequest.getNombre());
+        if (productRequest.getPrecioVenta() != null)
+            producto.setPrecioVenta(productRequest.getPrecioVenta());
+        if (productRequest.getMarca() != null)
+            producto.setMarca(productRequest.getMarca());
+        if (productRequest.getPrecioCompra() != null)
+            producto.setPrecioCompra(productRequest.getPrecioCompra());
+        if (productRequest.getPeso() != null)
+            producto.setPeso(Float.parseFloat(productRequest.getPeso()));
+        if (productRequest.getEstado() != null)
+            producto.setEstado(Estado.valueOf(productRequest.getEstado()));
+        if (productRequest.getComentario() != null)
+            producto.setComentario(productRequest.getComentario());
+
+        if (productRequest.getCodigoBarras() != null)
+            producto.setCodigoBarras(productRequest.getCodigoBarras());
+
+        // EN EL FRONT VALIDAR EL FORMATO DEL NUMERO DE BARRAS
+        // if (producto.validarCodigo(productDTO.getCodigoBarras())) {
+        // producto.setCodigoBarras(productDTO.getCodigoBarras());
+        // } else {
+        // throw new IllegalArgumentException("El codigo de barras ingresado no es
+        // válido.");
+        // }
+
+        Map<String, String> detailList = new LinkedHashMap<>();
+
+        for (Map.Entry<String, String> detalle : productRequest.getDetail().entrySet()) {
+            detailList.put(detalle.getKey(), detalle.getValue());
         }
+
+        producto.setDetail(detailList);
 
         return productoDAO.save(producto);
 
     }
 
+    @Transactional(readOnly = true)
     public List<Producto> obtenerProductosActivos() {
         List<Producto> activos = new ArrayList<>();
         for (Producto producto : productoDAO.findAll()) {
@@ -223,26 +160,31 @@ public class ProductoService {
         return activos;
     }
 
+    @Transactional
     public void eliminarProducto(int id) {
         productoDAO.deleteById(Long.valueOf(id));
     }
 
+    @Transactional
     public void actualizarStockProducto(Producto producto, int cantidad) {
         Producto product = producto;
         product.setStock(String.valueOf(Integer.valueOf(product.getStock()) - cantidad));
         productoDAO.save(product);
     }
 
+    @Transactional
     public void aumentarStock(Producto producto, int cantidad) {
         Producto product = producto;
         product.setStock(String.valueOf(Integer.valueOf(product.getStock()) + cantidad));
         productoDAO.save(product);
     }
 
+    @Transactional(readOnly = true)
     public List<Producto> obtenerStockBajo() {
         return productoDAO.obtenerProductosStockBajo();
     }
 
+    @Transactional(readOnly = true)
     public List<Producto> obtenerProductosConFiltro(ProductFilterDTO productFilterDTO) {
 
         String proveedor = null;
@@ -258,7 +200,8 @@ public class ProductoService {
         }
 
         if (productFilterDTO.getCategoria() != null) {
-            Categoria cat = categoriaDAO.findByNombre(productFilterDTO.getCategoria());
+            Categoria cat = categoriaDAO.findByNombre(productFilterDTO.getCategoria())
+                    .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
             if (cat != null) {
                 categoria = cat.getNombre();
             }

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.ecommerce.dto.ProveedorDTO;
 import com.example.domain.ecommerce.models.entities.Proveedor;
@@ -22,10 +23,12 @@ public class ProveedorService {
     
     private final ProveedorDAO proveedorDAO;
 
+    @Transactional(readOnly = true)
     public Iterable<Proveedor> obtenerProveedores() {
         return proveedorDAO.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Proveedor> obtenerProveedoresActivos(){
         List<Proveedor> activos = new ArrayList<>();
         for (Proveedor proveedor : proveedorDAO.findAll()) {
@@ -36,6 +39,7 @@ public class ProveedorService {
         return activos;
     }
 
+    @Transactional
     public void createProv(ProveedorDTO proveedorDTO) {
         Proveedor nuevo_proveedor = new Proveedor();
         nuevo_proveedor.setRuc(proveedorDTO.getRuc());
@@ -48,6 +52,7 @@ public class ProveedorService {
 
     }
 
+    @Transactional
     public void updateProv(ProveedorDTO proveedorDTO, int id) {
 
         Optional<Proveedor> prov = proveedorDAO.findById(Long.valueOf(id));
@@ -75,6 +80,7 @@ public class ProveedorService {
         proveedorDAO.save(proveedor);
     }
 
+    @Transactional
     public void eliminarProveedor(int id) {
         proveedorDAO.deleteById(Long.valueOf(id));
     }

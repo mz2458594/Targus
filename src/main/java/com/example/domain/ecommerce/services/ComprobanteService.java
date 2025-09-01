@@ -49,6 +49,7 @@ public class ComprobanteService {
         return comprobante;
     }
 
+    @Transactional
     public Comprobante generarComprobanteVenta(Venta venta, String tipo, String ruc, String razon) {
         Comprobante comprobante = generarComprobante(tipo, ruc, razon);
         comprobante.setVenta(venta);
@@ -64,6 +65,7 @@ public class ComprobanteService {
 
     }
 
+    @Transactional(readOnly = true)
     public Comprobante obtenerComprobantePorId(int id) {
         return comprobanteDAO.findById(Long.valueOf(id)).get();
     }
