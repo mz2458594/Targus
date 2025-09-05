@@ -41,12 +41,6 @@ public class PersonaService {
     public void createPersona(RegistrerRequest user, Usuario usuario) {
         Persona persona;
 
-        LocalDate fechaNacimineto = user.getFecha_nac().toLocalDate();
-
-        // if (calcularEdad(fechaNacimineto) < 18) {
-        //     throw new RuntimeException("No se puede registrar a un empleado menor de 18 años");
-        // }
-
         if (user.getRol().equals("Empleado") || user.getRol().equals("Administrador")) {
 
             Empleado empleado = new Empleado();
@@ -77,6 +71,20 @@ public class PersonaService {
             empleadoDAO.save((Empleado) persona);
         }
 
+    }
+
+    @Transactional
+    public void userPerson(Long id, Usuario usuario){
+
+        Persona persona = personaDAO.findById(id).orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+
+        if (persona instanceof Cliente cliente) {
+            cliente.setUsuario(usuario);
+            clienteDAO.save(cliente);
+        } else if (persona instanceof Empleado empleado) {
+            empleado.setUsuario(usuario);
+            empleadoDAO.save(empleado);
+        }
     }
 
     @Transactional

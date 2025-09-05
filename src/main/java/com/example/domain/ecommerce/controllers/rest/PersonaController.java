@@ -5,13 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.domain.ecommerce.dto.PersonaFilterDTO;
+import com.example.domain.ecommerce.dto.request.RegistrerRequest;
 import com.example.domain.ecommerce.models.entities.Persona;
 import com.example.domain.ecommerce.services.PersonaService;
 
@@ -39,5 +40,12 @@ public class PersonaController {
         boolean exist = personaService.telefonoExists(telefono);
         return ResponseEntity.ok(exist);
     }
+
+    // @PostMapping("/create")
+    // public ResponseEntity<String> createPerson(@RequestBody RegistrerRequest registrerRequest){
+    //     personaService.createPersona(registrerRequest, null);
+    //     return ResponseEntity.status(201).build();
+    // }
+
 
 }

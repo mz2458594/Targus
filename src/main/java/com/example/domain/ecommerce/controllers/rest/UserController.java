@@ -7,12 +7,8 @@ import com.example.domain.ecommerce.dto.request.RegistrerRequest;
 import com.example.domain.ecommerce.services.DireccionService;
 import com.example.domain.ecommerce.services.EmailService;
 import com.example.domain.ecommerce.services.UsuarioService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
 import com.example.domain.ecommerce.models.entities.Usuario;
 import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
