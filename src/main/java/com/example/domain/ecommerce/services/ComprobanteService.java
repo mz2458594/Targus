@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.domain.ecommerce.models.entities.Comprobante;
 import com.example.domain.ecommerce.models.entities.ControlComprobante;
-import com.example.domain.ecommerce.models.entities.Pedido;
 import com.example.domain.ecommerce.models.entities.PedidoProveedor;
 import com.example.domain.ecommerce.models.entities.Venta;
 import com.example.domain.ecommerce.models.enums.TipoComprobante;
@@ -50,6 +49,7 @@ public class ComprobanteService {
         return comprobante;
     }
 
+    @Transactional
     public Comprobante generarComprobanteVenta(Venta venta, String tipo, String ruc, String razon) {
         Comprobante comprobante = generarComprobante(tipo, ruc, razon);
         comprobante.setVenta(venta);
@@ -65,6 +65,7 @@ public class ComprobanteService {
 
     }
 
+    @Transactional(readOnly = true)
     public Comprobante obtenerComprobantePorId(int id) {
         return comprobanteDAO.findById(Long.valueOf(id)).get();
     }

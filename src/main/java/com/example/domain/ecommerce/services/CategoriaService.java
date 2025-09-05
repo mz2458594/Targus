@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import com.example.domain.ecommerce.dto.CategoriaDTO;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.domain.ecommerce.dto.request.CategoriaRequest;
 import com.example.domain.ecommerce.models.entities.Categoria;
 import com.example.domain.ecommerce.repositories.CategoriaDAO;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,14 +15,16 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class CategoriaService {
-    
+
     private final CategoriaDAO categoriaDAO;
-    
+
+    @Transactional(readOnly = true)
     public List<Categoria> obtenerCategorias() {
         return categoriaDAO.findAll();
     }
 
-    public Categoria createCategory(CategoriaDTO categoriaDTO){
+    @Transactional
+    public Categoria createCategory(CategoriaRequest categoriaDTO) {
         Categoria nueva_categoria = new Categoria();
         nueva_categoria.setNombre(categoriaDTO.getNombre());
         nueva_categoria.setDescripcion(categoriaDTO.getDescripcion());
@@ -30,7 +34,8 @@ public class CategoriaService {
 
     }
 
-    public Categoria updateCategoria(CategoriaDTO cate, int id) {
+    @Transactional
+    public Categoria updateCategoria(CategoriaRequest cate, int id) {
 
         Optional<Categoria> cat = categoriaDAO.findById(Long.valueOf(id));
 
@@ -47,11 +52,9 @@ public class CategoriaService {
         return categoriaDAO.save(categoria);
     }
 
-
+    @Transactional
     public void eliminarCategoria(int id) {
         categoriaDAO.deleteById(Long.valueOf(id));
     }
-
-
 
 }

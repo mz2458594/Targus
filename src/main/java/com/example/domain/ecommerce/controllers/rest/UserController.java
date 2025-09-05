@@ -3,12 +3,12 @@ package com.example.domain.ecommerce.controllers.rest;
 import com.example.domain.ecommerce.dto.DireccionDTO;
 import com.example.domain.ecommerce.dto.UserDTO;
 import com.example.domain.ecommerce.dto.UsuarioPersonaDTO;
+import com.example.domain.ecommerce.dto.request.RegistrerRequest;
 import com.example.domain.ecommerce.services.DireccionService;
 import com.example.domain.ecommerce.services.EmailService;
 import com.example.domain.ecommerce.services.UsuarioService;
 import com.example.domain.ecommerce.models.entities.Usuario;
 import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,33 +27,14 @@ public class UserController {
     @Autowired
     EmailService emailService;
 
-    @PutMapping("/updateDirection/{id}")
-    public ResponseEntity<?> updateDirection(
-            @PathVariable("id") int id_usuario,
-            @RequestBody DireccionDTO direccion) {
-
-        direccionService.updateDirection(direccion, id_usuario);
-
-        return ResponseEntity.ok("Dirección actualizada con éxito");
-
-    }
-
     @GetMapping("/")
     public ResponseEntity<List<UsuarioPersonaDTO>> obteneUsuarios() {
         return ResponseEntity.ok(usuarioService.listarClientesYEmpleados());
     }
 
-    @PostMapping("/createUser")
-    public ResponseEntity<Usuario> createUser(@RequestBody UserDTO user) {
-        Usuario usuario = usuarioService.createUser(user);
-
-        return ResponseEntity.status(201).body(usuario);
-    }
-
-    @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
-        usuarioService.eliminarUsuario(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{id}")
+    public ResponseEntity<Usuario> getUserById(@PathVariable Long id){
+        return ResponseEntity.ok(usuarioService.obtenerUsuarioPorId(id));
     }
 
     @GetMapping("/username")
@@ -74,11 +55,44 @@ public class UserController {
 
     }
 
-    // METODOS QUE FALTAN
+    @PostMapping("/createUser")
+    public ResponseEntity<Usuario> createUser(@RequestBody RegistrerRequest user) {
+        Usuario usuario = usuarioService.createUser(user);
+        return ResponseEntity.status(201).body(usuario);
+    }
 
-    // enviarEmailRegistrar
-    // activar
-    // emailContraseña
-    // actualizarContraseña
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<String> activate(@PathVariable Long id){
+        usuarioService.activar(id);
+        return ResponseEntity.status(200).build();
+    }
+
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Usuario> updateUser(@RequestBody UserDTO userDTO, @PathVariable Long id){
+        return ResponseEntity.ok(usuarioService.actualizarUsuarios(userDTO, id));
+    }
+
+    @PutMapping("/password/{id}")
+    public ResponseEntity<String> updatePassword(@PathVariable Long id, @RequestBody String password){
+        usuarioService.actualizarContraseña(password, id);
+        return ResponseEntity.status(200).build();
+    }
+
+    @PutMapping("/updateDirection/{id}")
+    public ResponseEntity<?> updateDirection(
+            @PathVariable("id") int id_usuario,
+            @RequestBody DireccionDTO direccion) {
+
+        direccionService.updateDirection(direccion, id_usuario);
+        return ResponseEntity.ok("Dirección actualizada con éxito");
+
+    }
+
+    @DeleteMapping("/deleteUser/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
+        usuarioService.eliminarUsuario(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

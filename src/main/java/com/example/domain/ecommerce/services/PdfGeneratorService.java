@@ -17,7 +17,6 @@ import com.example.domain.ecommerce.models.entities.Comprobante;
 import com.example.domain.ecommerce.models.entities.DetallePedido;
 import com.example.domain.ecommerce.models.entities.Detalle_venta;
 import com.example.domain.ecommerce.models.entities.Empleado;
-import com.example.domain.ecommerce.models.entities.PedidoProveedor;
 import com.example.domain.ecommerce.models.entities.Proveedor;
 import com.example.domain.ecommerce.models.entities.Usuario;
 import com.example.domain.ecommerce.models.entities.Venta;
@@ -117,8 +116,7 @@ public class PdfGeneratorService {
         if (comprobante.getTipo() == TipoComprobante.FACTURA) {
             document.add(
                     new Paragraph(
-                            "\nRUC: " + comprobante.getRucCliente() + "    \nRazón social: "
-                                    + comprobante.getRazonSocial()));
+                            "\nRUC: " + comprobante.getRucCliente()));
         }
 
         // 5. Tabla de productos
@@ -138,9 +136,10 @@ public class PdfGeneratorService {
         document.add(table);
 
         // 6. Totales
-        BigDecimal subtotal = venta.getTotal();
-        BigDecimal igv = subtotal.multiply(subtotal);
-        BigDecimal total = subtotal;
+        BigDecimal total = venta.getTotal();
+        BigDecimal divisor = new BigDecimal("1.18");
+        BigDecimal subtotal = total.divide(divisor, 2, RoundingMode.HALF_UP);
+        BigDecimal igv = total.subtract(subtotal);
 
         document.add(new Paragraph("\nSUBTOTAL: S/ " + String.format("%.2f", subtotal)));
 
@@ -248,7 +247,8 @@ public class PdfGeneratorService {
             // Totales generales en la última página
             Table totales = new Table(UnitValue.createPercentArray(new float[] { 80, 20 }));
             totales.setWidth(UnitValue.createPercentValue(100));
-            BigDecimal opGravada = comprobante.getPedidoProveedor().getTotal().divide(BigDecimal.valueOf(1.18),2,RoundingMode.HALF_UP);
+            BigDecimal opGravada = comprobante.getPedidoProveedor().getTotal().divide(BigDecimal.valueOf(1.18), 2,
+                    RoundingMode.HALF_UP);
             BigDecimal igv = comprobante.getPedidoProveedor().getTotal().subtract(opGravada);
             BigDecimal total = comprobante.getPedidoProveedor().getTotal();
 

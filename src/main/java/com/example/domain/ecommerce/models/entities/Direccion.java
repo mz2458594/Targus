@@ -26,7 +26,7 @@ public class Direccion implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_direccion")
-    private int idDireccion;
+    private Long idDireccion;
 
     @Column(name = "calle")
     private String calle;

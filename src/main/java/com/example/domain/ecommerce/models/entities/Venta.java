@@ -34,7 +34,7 @@ public class Venta implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_ventas")
-    private int idVentas;
+    private Long idVentas;
 
     @Column(name = "f_venta")
     private Timestamp fechaVenta;

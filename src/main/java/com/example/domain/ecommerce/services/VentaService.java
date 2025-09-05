@@ -6,11 +6,9 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.example.domain.ecommerce.dto.RequestDTO;
 import com.example.domain.ecommerce.dto.VentaDTO;
-import com.example.domain.ecommerce.dto.VentaRequestDTO;
 import com.example.domain.ecommerce.models.entities.Comprobante;
 import com.example.domain.ecommerce.models.entities.Detalle_venta;
 import com.example.domain.ecommerce.models.entities.Empleado;
@@ -28,8 +26,6 @@ import com.example.domain.ecommerce.repositories.TarifaDAO;
 import com.example.domain.ecommerce.repositories.VentaEcommerceDAO;
 import com.example.domain.ecommerce.repositories.VentasDAO;
 import com.example.domain.ecommerce.repositories.VentasInventarioDAO;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +53,65 @@ public class VentaService {
     private final TarifaDAO tarifaDAO;
 
     private final EmpleadoDAO empleadoDAO;
+
+    @Transactional(readOnly = true)
+    public List<Venta> getVentas() {
+        return (List<Venta>) ventasDAO.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<VentaInventario> getVentaInventario() {
+        return (List<VentaInventario>) ventasInventarioDAO.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<VentaEcommerce> getVentaEcommerce() {
+        return (List<VentaEcommerce>) ventaEcommerceDAO.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Venta> obtenerVentasConFiltro(VentaDTO ventaDTO) {
+
+        Timestamp fechaInicio = ventaDTO.getFechaInicio() != null ? new Timestamp(ventaDTO.getFechaInicio().getTime())
+                : null;
+        Timestamp fechaFinal = ventaDTO.getFechaFinal() != null ? new Timestamp(ventaDTO.getFechaFinal().getTime())
+                : null;
+        TipoComprobante tipoComprobante = null;
+        if (ventaDTO.getComprobante() != null && !ventaDTO.getComprobante().isEmpty()) {
+            tipoComprobante = TipoComprobante.valueOf(ventaDTO.getComprobante());
+        }
+
+        String username = null;
+
+        if (ventaDTO.getIdResponsable() != null) {
+            Empleado empleado = empleadoDAO.findById(Long.valueOf(ventaDTO.getIdResponsable()))
+                    .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
+            username = empleado.getUsuario().getUsername();
+
+        }
+
+        TipoVenta tipo;
+        try {
+            tipo = ventaDTO.getTipoVenta() != null
+                    ? TipoVenta.valueOf(ventaDTO.getTipoVenta())
+                    : TipoVenta.Normal;
+        } catch (IllegalArgumentException | NullPointerException e) {
+            tipo = TipoVenta.Normal;
+        }
+
+        switch (tipo) {
+            case Ecommerce:
+                return ventaEcommerceDAO.findByUsuarioAndTipoComprobanteAndFechaVentaBetween(fechaInicio, fechaFinal,
+                        username, tipoComprobante);
+            case Inventario:
+                return ventasInventarioDAO.findByUsuarioAndTipoComprobanteAndFechaVentaBetween(fechaInicio, fechaFinal,
+                        username, tipoComprobante);
+            case Normal:
+            default:
+                return ventasDAO.findByUsuarioAndTipoComprobanteAndFechaVentaBetween(fechaInicio, fechaFinal, username,
+                        tipoComprobante);
+        }
+    }
 
     @Transactional
     public Venta crearVentaEcommerce(RequestDTO data) {
@@ -104,7 +159,8 @@ public class VentaService {
             vp.setVenta(venta);
 
             // Para disminuir la cantidad de productos luego de registrar una venta
-            productosService.actualizarStockProducto(p, productos.getCantidad());
+            productosService.actualizarStock(p.getIdProducto(),
+                    (Integer.valueOf(p.getStock()) - productos.getCantidad()));
 
             BigDecimal subtotal = cantidad.multiply(precio);
             vp.setSubtotal(subtotal);
@@ -152,61 +208,6 @@ public class VentaService {
         ventaGuardada.setComprobante(comprobante);
 
         return ventaGuardada;
-    }
-
-    public List<VentaInventario> getVentaInventario() {
-        return (List<VentaInventario>) ventasInventarioDAO.findAll();
-    }
-
-    public List<VentaEcommerce> getVentaEcommerce() {
-        return (List<VentaEcommerce>) ventaEcommerceDAO.findAll();
-    }
-
-    public List<Venta> getVentas() {
-        return (List<Venta>) ventasDAO.findAll();
-    }
-
-    public List<Venta> obtenerVentasConFiltro(VentaDTO ventaDTO) {
-
-        Timestamp fechaInicio = ventaDTO.getFechaInicio() != null ? new Timestamp(ventaDTO.getFechaInicio().getTime())
-                : null;
-        Timestamp fechaFinal = ventaDTO.getFechaFinal() != null ? new Timestamp(ventaDTO.getFechaFinal().getTime())
-                : null;
-        TipoComprobante tipoComprobante = null;
-        if (ventaDTO.getComprobante() != null && !ventaDTO.getComprobante().isEmpty()) {
-            tipoComprobante = TipoComprobante.valueOf(ventaDTO.getComprobante());
-        }
-
-        String username = null;
-
-        if (ventaDTO.getIdResponsable() != null) {
-            Empleado empleado = empleadoDAO.findById(Long.valueOf(ventaDTO.getIdResponsable()))
-                    .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
-            username = empleado.getUsuario().getUsername();
-
-        }
-
-        TipoVenta tipo;
-        try {
-            tipo = ventaDTO.getTipoVenta() != null
-                    ? TipoVenta.valueOf(ventaDTO.getTipoVenta())
-                    : TipoVenta.Normal;
-        } catch (IllegalArgumentException | NullPointerException e) {
-            tipo = TipoVenta.Normal;
-        }
-
-        switch (tipo) {
-            case Ecommerce:
-                return ventaEcommerceDAO.findByUsuarioAndTipoComprobanteAndFechaVentaBetween(fechaInicio, fechaFinal,
-                        username, tipoComprobante);
-            case Inventario:
-                return ventasInventarioDAO.findByUsuarioAndTipoComprobanteAndFechaVentaBetween(fechaInicio, fechaFinal,
-                        username, tipoComprobante);
-            case Normal:
-            default:
-                return ventasDAO.findByUsuarioAndTipoComprobanteAndFechaVentaBetween(fechaInicio, fechaFinal, username,
-                        tipoComprobante);
-        }
     }
 
 }

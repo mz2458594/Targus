@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idUsuario;
+    private Long idUsuario;
 
     @Column(nullable = false, unique = true)
     private String username;

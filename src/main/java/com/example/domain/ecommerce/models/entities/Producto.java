@@ -1,7 +1,9 @@
 package com.example.domain.ecommerce.models.entities;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,6 +14,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
@@ -21,7 +24,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.domain.ecommerce.models.enums.Estado;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,7 +43,7 @@ public class Producto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_producto")
-    private int idProducto;
+    private Long idProducto;
 
     private String nombre;
 
@@ -92,6 +97,14 @@ public class Producto implements Serializable {
 
     private String comentario;
 
+    @ElementCollection
+    @CollectionTable(
+        name = "product_details",
+        joinColumns = @JoinColumn(name = "id_producto")
+    )
+    @MapKeyColumn(name = "atributo")
+    @Column(name = "valor")
+    private Map<String, String> detail = new LinkedHashMap<>();
 
 
 }

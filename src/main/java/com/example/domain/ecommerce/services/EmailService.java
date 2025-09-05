@@ -6,7 +6,6 @@ import com.example.domain.ecommerce.models.entities.Detalle_venta;
 import com.example.domain.ecommerce.models.entities.Email;
 import com.example.domain.ecommerce.models.entities.PedidoUsuario;
 import com.example.domain.ecommerce.models.entities.Producto;
-import com.example.domain.ecommerce.models.entities.VentaEcommerce;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,114 +27,114 @@ public class EmailService {
     @Autowired
     TemplateEngine templateEngine;
 
-    @Value("${mail.urlFront}")
-    private String urlFront;
+    // @Value("${mail.urlFront}")
+    // private String urlFront;
 
-    @Value("${mail.urlF}")
-    private String urlF;
+    // @Value("${mail.urlF}")
+    // private String urlF;
 
-    public void sendEmailTemplate(Email email, int id){
-        MimeMessage message = javaMailSender.createMimeMessage();
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message,true);
-            Context context = new Context();
-            Map<String, Object> model = new HashMap<>();
+    // public void sendEmailTemplate(Email email, Long id){
+    //     MimeMessage message = javaMailSender.createMimeMessage();
+    //     try {
+    //         MimeMessageHelper helper = new MimeMessageHelper(message,true);
+    //         Context context = new Context();
+    //         Map<String, Object> model = new HashMap<>();
 
-            model.put("username", email.getUserName());
-            model.put("url", urlFront+"/"+id);
+    //         model.put("username", email.getUserName());
+    //         model.put("url", urlFront+"/"+id);
 
-            context.setVariables(model);
+    //         context.setVariables(model);
 
-            String htmlText = templateEngine.process("commerce/email_password", context);
-            helper.setFrom(email.getMailFrom());
-            helper.setTo(email.getMailTo());
-            helper.setSubject(email.getSubject());
-            helper.setText(htmlText, true);
+    //         String htmlText = templateEngine.process("commerce/email_password", context);
+    //         helper.setFrom(email.getMailFrom());
+    //         helper.setTo(email.getMailTo());
+    //         helper.setSubject(email.getSubject());
+    //         helper.setText(htmlText, true);
 
-            javaMailSender.send(message);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-    }
+    //         javaMailSender.send(message);
+    //     } catch (MessagingException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
-    public void sendEmailVenta(Email email, List<Detalle_venta> detalle_ventas, double total, List<Producto> productos){
-        MimeMessage message = javaMailSender.createMimeMessage();
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message,true);
-            Context context = new Context();
-            Map<String, Object> model = new HashMap<>();
+    // public void sendEmailVenta(Email email, List<Detalle_venta> detalle_ventas, double total, List<Producto> productos){
+    //     MimeMessage message = javaMailSender.createMimeMessage();
+    //     try {
+    //         MimeMessageHelper helper = new MimeMessageHelper(message,true);
+    //         Context context = new Context();
+    //         Map<String, Object> model = new HashMap<>();
 
-            model.put("username", email.getUserName());
-            model.put("url", urlFront);
-            model.put("lista", detalle_ventas);
-            model.put("total", total);
-            model.put("productos", productos);
-
-
-            context.setVariables(model);
-
-            String htmlText = templateEngine.process("commerce/mail_detalle_pedido", context);
-            helper.setFrom(email.getMailFrom());
-            helper.setTo(email.getMailTo());
-            helper.setSubject(email.getSubject());
-            helper.setText(htmlText, true);
-
-            javaMailSender.send(message);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-    }
+    //         model.put("username", email.getUserName());
+    //         model.put("url", urlFront);
+    //         model.put("lista", detalle_ventas);
+    //         model.put("total", total);
+    //         model.put("productos", productos);
 
 
-    public void sendEmailRegistrar(Email email, int id){
-        MimeMessage message = javaMailSender.createMimeMessage();
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message,true);
-            Context context = new Context();
-            Map<String, Object> model = new HashMap<>();
+    //         context.setVariables(model);
 
-            model.put("username", email.getUserName());
-            model.put("url", urlF+"/"+id);
+    //         String htmlText = templateEngine.process("commerce/mail_detalle_pedido", context);
+    //         helper.setFrom(email.getMailFrom());
+    //         helper.setTo(email.getMailTo());
+    //         helper.setSubject(email.getSubject());
+    //         helper.setText(htmlText, true);
 
-            context.setVariables(model);
+    //         javaMailSender.send(message);
+    //     } catch (MessagingException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
-            String htmlText = templateEngine.process("commerce/email_registrar", context);
-            helper.setFrom(email.getMailFrom());
-            helper.setTo(email.getMailTo());
-            helper.setSubject(email.getSubject());
-            helper.setText(htmlText, true);
 
-            javaMailSender.send(message);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-    }
+    // public void sendEmailRegistrar(Email email, Long id){
+    //     MimeMessage message = javaMailSender.createMimeMessage();
+    //     try {
+    //         MimeMessageHelper helper = new MimeMessageHelper(message,true);
+    //         Context context = new Context();
+    //         Map<String, Object> model = new HashMap<>();
 
-    public void sendEmailPedido(Email email, PedidoUsuario pedidoUsuario, 
-    // VentaEcommerce ventaEcommerce,
-     Cliente cliente){
-        MimeMessage message = javaMailSender.createMimeMessage();
-        try{
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            Context context = new Context();
-            Map<String, Object> model = new HashMap<>();
+    //         model.put("username", email.getUserName());
+    //         model.put("url", urlF+"/"+id);
 
-            model.put("pedido", pedidoUsuario);
-            model.put("costoEnvio", pedidoUsuario.getEnvio());
-            model.put("estado", pedidoUsuario.getEstado());
-            model.put("cliente", cliente);
+    //         context.setVariables(model);
 
-            context.setVariables(model);
+    //         String htmlText = templateEngine.process("commerce/email_registrar", context);
+    //         helper.setFrom(email.getMailFrom());
+    //         helper.setTo(email.getMailTo());
+    //         helper.setSubject(email.getSubject());
+    //         helper.setText(htmlText, true);
 
-            String htmlText = templateEngine.process("venta/correoEstado", context);
-            helper.setFrom(email.getMailFrom());
-            helper.setTo(email.getMailTo());
-            helper.setSubject(email.getSubject());
-            helper.setText(htmlText, true);
+    //         javaMailSender.send(message);
+    //     } catch (MessagingException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
-            javaMailSender.send(message);
-        }catch(MessagingException e){
-            e.printStackTrace();
-        }
-    }
+    // public void sendEmailPedido(Email email, PedidoUsuario pedidoUsuario, 
+    // // VentaEcommerce ventaEcommerce,
+    //  Cliente cliente){
+    //     MimeMessage message = javaMailSender.createMimeMessage();
+    //     try{
+    //         MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    //         Context context = new Context();
+    //         Map<String, Object> model = new HashMap<>();
+
+    //         model.put("pedido", pedidoUsuario);
+    //         model.put("costoEnvio", pedidoUsuario.getEnvio());
+    //         model.put("estado", pedidoUsuario.getEstado());
+    //         model.put("cliente", cliente);
+
+    //         context.setVariables(model);
+
+    //         String htmlText = templateEngine.process("venta/correoEstado", context);
+    //         helper.setFrom(email.getMailFrom());
+    //         helper.setTo(email.getMailTo());
+    //         helper.setSubject(email.getSubject());
+    //         helper.setText(htmlText, true);
+
+    //         javaMailSender.send(message);
+    //     }catch(MessagingException e){
+    //         e.printStackTrace();
+    //     }
+    // }
 }

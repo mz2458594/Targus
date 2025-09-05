@@ -6,5 +6,5 @@ import com.example.domain.ecommerce.models.entities.Pedido;
 
 public interface PedidoFactory {
     Pedido crearPedido(RequestDTO data);
-    void actualizarEstado(int id,EstadoRequestDTO estadoRequestDTO);
+    void actualizarEstado(Long id,EstadoRequestDTO estadoRequestDTO);
 }

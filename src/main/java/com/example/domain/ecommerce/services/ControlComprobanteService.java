@@ -1,6 +1,7 @@
 package com.example.domain.ecommerce.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.ecommerce.models.entities.ControlComprobante;
 import com.example.domain.ecommerce.models.enums.TipoComprobante;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 public class ControlComprobanteService {
     private ControlComprobanteDAO controlComprobanteDAO;
 
+    @Transactional(readOnly = true)
     public String getNumeroTransaccion(String tipo) {
 
         TipoComprobante tip;

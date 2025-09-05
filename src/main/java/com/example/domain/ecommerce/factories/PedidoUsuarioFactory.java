@@ -122,8 +122,8 @@ public class PedidoUsuarioFactory implements PedidoFactory {
     }
 
     @Override
-    public void actualizarEstado(int id, EstadoRequestDTO estadoRequestDTO) {
-        PedidoUsuario pedido = pedidoUsuarioDAO.findById(Long.valueOf(id))
+    public void actualizarEstado(Long id, EstadoRequestDTO estadoRequestDTO) {
+        PedidoUsuario pedido = pedidoUsuarioDAO.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido con id " + id + " no encontrado"));
 
         EstadoPedido nuevoEstado = EstadoPedido.valueOf(estadoRequestDTO.getEstado());
@@ -143,7 +143,7 @@ public class PedidoUsuarioFactory implements PedidoFactory {
 
         pedidoUsuarioDAO.save(pedido);
 
-        crearEmail(pedido);
+        // crearEmail(pedido);
 
     }
 
@@ -151,13 +151,13 @@ public class PedidoUsuarioFactory implements PedidoFactory {
         Cliente cliente = clienteDAO.findByUsuario(pedidoUsuario.getUser())
                 .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
 
-        Email email = new Email();
-        email.setMailFrom("mz2458594@gmail.com");
-        email.setMailTo(pedidoUsuario.getUser().getEmail());
-        email.setSubject("Seguimiento de pedido | Targus");
-        email.setJwt(
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
-        emailService.sendEmailPedido(email, pedidoUsuario,
-                cliente);
+        // Email email = new Email();
+        // email.setMailFrom("mz2458594@gmail.com");
+        // email.setMailTo(pedidoUsuario.getUser().getEmail());
+        // email.setSubject("Seguimiento de pedido | Targus");
+        // email.setJwt(
+        //         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+        // // emailService.sendEmailPedido(email, pedidoUsuario,
+        // //         cliente);
     }
 }

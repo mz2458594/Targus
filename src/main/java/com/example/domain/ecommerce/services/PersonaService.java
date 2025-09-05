@@ -7,9 +7,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.ecommerce.dto.PersonaFilterDTO;
 import com.example.domain.ecommerce.dto.UserDTO;
+import com.example.domain.ecommerce.dto.request.RegistrerRequest;
 import com.example.domain.ecommerce.models.entities.Cliente;
 import com.example.domain.ecommerce.models.entities.Direccion;
 import com.example.domain.ecommerce.models.entities.Empleado;
@@ -35,14 +37,9 @@ public class PersonaService {
 
     private final DireccionService direccionService;
 
-    public void createPersona(UserDTO user, Usuario usuario) {
+    @Transactional
+    public void createPersona(RegistrerRequest user, Usuario usuario) {
         Persona persona;
-
-        LocalDate fechaNacimineto = user.getFecha_nac().toLocalDate();
-
-        if (calcularEdad(fechaNacimineto) < 18) {
-            throw new RuntimeException("No se puede registrar a un empleado menor de 18 años");
-        }
 
         if (user.getRol().equals("Empleado") || user.getRol().equals("Administrador")) {
 
@@ -76,6 +73,21 @@ public class PersonaService {
 
     }
 
+    @Transactional
+    public void userPerson(Long id, Usuario usuario){
+
+        Persona persona = personaDAO.findById(id).orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+
+        if (persona instanceof Cliente cliente) {
+            cliente.setUsuario(usuario);
+            clienteDAO.save(cliente);
+        } else if (persona instanceof Empleado empleado) {
+            empleado.setUsuario(usuario);
+            empleadoDAO.save(empleado);
+        }
+    }
+
+    @Transactional
     public Persona actualizarPersona(UserDTO userDTO, Usuario usuario) {
 
         Persona persona;
@@ -121,10 +133,7 @@ public class PersonaService {
 
     }
 
-    private int calcularEdad(LocalDate fecha) {
-        return Period.between(fecha, LocalDate.now()).getYears();
-    }
-
+    @Transactional(readOnly = true)
     public List<Persona> obtenerPersonasConFiltros(PersonaFilterDTO personaFilterDTO) {
 
         Estado estado = null;
@@ -138,9 +147,9 @@ public class PersonaService {
         TipoPersona tipo;
         try {
             tipo = personaFilterDTO.getTipo() != null ? TipoPersona.valueOf(personaFilterDTO.getTipo())
-                    : TipoPersona.Normal;
+                    : TipoPersona.Cliente;
         } catch (IllegalArgumentException | NullPointerException e) {
-            tipo = TipoPersona.Normal;
+            tipo = TipoPersona.Cliente;
         }
 
         String departamento = personaFilterDTO.getDepartamento().equals("") ? null : personaFilterDTO.getDepartamento();
@@ -148,9 +157,9 @@ public class PersonaService {
         switch (tipo) {
             case Empleado:
                 return empleadoDAO.findByFiltro(estado, departamento);
-            case Cliente:
+            case Administrador:
                 return clienteDAO.findByFiltro(estado, departamento);
-            case Normal:
+            case Cliente:
             default:
                 final Estado estadoFinal = estado;
                 List<Persona> personas = personaDAO.findByFiltro(estado, departamento);
@@ -174,12 +183,18 @@ public class PersonaService {
 
     }
 
+    @Transactional(readOnly = true)
     public boolean dniExists(String dni) {
         return personaDAO.findByDni(dni).isPresent();
     }
 
+    @Transactional(readOnly = true)
     public boolean telefonoExists(String telefono) {
         return personaDAO.findByTelefono(telefono).isPresent();
+    }
+
+    private int calcularEdad(LocalDate fecha) {
+        return Period.between(fecha, LocalDate.now()).getYears();
     }
 
 }

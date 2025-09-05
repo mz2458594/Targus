@@ -1,11 +1,11 @@
-package com.example.domain.ecommerce.dto;
+package com.example.domain.ecommerce.dto.request;
 
 import java.sql.Date;
 
 import lombok.Data;
 
 @Data
-public class UserDTO {
+public class RegistrerRequest {
     private String nombre;
     private String apellido;
     private String num_documento;
@@ -22,5 +22,4 @@ public class UserDTO {
     private String estado;
     private Date fecha_nac;
     private String comentario;
-
 }

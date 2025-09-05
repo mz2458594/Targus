@@ -26,7 +26,7 @@ public class DetallePedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_detalle;
+    private Long id_detalle;
 
     private int cantidad;
 

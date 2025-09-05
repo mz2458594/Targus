@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import com.example.domain.ecommerce.dto.UserDTO;
 import com.example.domain.ecommerce.dto.UsuarioPersonaDTO;
+import com.example.domain.ecommerce.dto.request.RegistrerRequest;
 import com.example.domain.ecommerce.models.entities.*;
 import com.example.domain.ecommerce.models.enums.Estado;
 import com.example.domain.ecommerce.repositories.ClienteDAO;
@@ -14,6 +15,7 @@ import com.example.domain.ecommerce.repositories.UsuarioDAO;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -38,12 +40,12 @@ public class UsuarioService {
         return (List<Usuario>) usuarioDAO.findAll();
     }
 
-    public List<Rol> listarRoles() {
-        return (List<Rol>) rolDAO.findAll();
+    public boolean emailExists(String email) {
+        return usuarioDAO.findByEmail(email).isPresent();
     }
 
-    public List<Empleado> getEmpleados(){
-        return (List<Empleado>) empleadoDAO.findAll();
+    public boolean usernameExists(String username) {
+        return usuarioDAO.findByUsername(username).isPresent();
     }
 
     public List<UsuarioPersonaDTO> listarClientesYEmpleados() {
@@ -101,7 +103,21 @@ public class UsuarioService {
         return resultado;
     }
 
-    public Usuario createUser(UserDTO user) {
+    @Transactional(readOnly = true)
+    public Usuario obtenerUsuarioPorId(Long id) {
+
+        Optional<Usuario> usuario = usuarioDAO.findById(id);
+
+        if (usuario.isEmpty()) {
+            throw new EntityNotFoundException("Usuario con id " + id + " no encontrado");
+
+        }
+
+        return usuario.get();
+    }
+
+    @Transactional
+    public Usuario createUser(RegistrerRequest user) {
 
         Usuario usuario = new Usuario();
         usuario.setUsername(user.getUsername());
@@ -110,11 +126,6 @@ public class UsuarioService {
         }
 
         usuario.setEmail(user.getCorreo());
-
-        // PARA EL AVANCE DE PROYECTO 3
-        // if (validarContraseña(user.getContraseña())) {
-        // usuario.setPassword(passwordEncoder.encode(user.getContraseña()));
-        // }
 
         usuario.setPassword(passwordEncoder.encode(user.getContraseña()));
 
@@ -142,9 +153,10 @@ public class UsuarioService {
 
     }
 
-    public Usuario actualizarUsuarios(UserDTO userDTO, int id) {
+    @Transactional
+    public Usuario actualizarUsuarios(UserDTO userDTO, Long id) {
 
-        Usuario usuario = usuarioDAO.findById(Long.valueOf(id)).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Usuario usuario = usuarioDAO.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         usuario.setEmail(userDTO.getCorreo());
         usuario.setUsername(userDTO.getUsername());
@@ -162,6 +174,31 @@ public class UsuarioService {
         return usuarioDAO.save(usuario);
     }
 
+    @Transactional
+    public void actualizarContraseña(String password, Long id_usuario) {
+
+        Usuario usuario = usuarioDAO.findById(id_usuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id_usuario));
+
+        usuario.setPassword(new BCryptPasswordEncoder().encode(password));
+
+        usuarioDAO.save(usuario);
+
+    }
+
+    public void activar(Long id) {
+        Optional<Usuario> usuario = usuarioDAO.findById(id);
+
+        if (usuario.isEmpty()) {
+            throw new RuntimeException("El usuario no esta asignado ni como cliente o empleado");
+        }
+
+        Usuario user = usuario.get();
+        user.setEstado(Estado.ACTIVO);
+        usuarioDAO.save(user);
+    }
+
+    @Transactional
     public void eliminarUsuario(int id) {
         Usuario usuario = usuarioDAO.findById(Long.valueOf(id)).get();
         Optional<Empleado> empleado = empleadoDAO.findByUsuario(usuario);
@@ -180,67 +217,16 @@ public class UsuarioService {
         usuarioDAO.deleteById(Long.valueOf(id));
     }
 
-    public Usuario obtenerUsuarioPorId(int id) {
-
-        Optional<Usuario> usuario = usuarioDAO.findById(Long.valueOf(id));
-
-        if (usuario.isEmpty()) {
-            throw new EntityNotFoundException("Usuario con id " + id + " no encontrado");
-
-        }
-
-        return usuario.get();
-    }
-
-    public boolean validarContraseña(String contraseña) {
-        if (contraseña.length() < 8) {
-            throw new RuntimeException("La contraseña debe tener como minimo 8 caracteres");
-        }
-
-        boolean mayusucla = false;
-        boolean numero = false;
-        boolean especial = false;
-
-        for (char l : contraseña.toCharArray()) {
-            if (Character.isUpperCase(l))
-                mayusucla = true;
-            else if (Character.isDigit(l))
-                numero = true;
-            else if ("?!¡@¿.,´)".indexOf(l) >= 0)
-                especial = true;
-        }
-
-        if (mayusucla && numero && especial) {
-            return true;
-        } else {
-            throw new RuntimeException(
-                    "La constraseña debe tener al menos una mayuscula, un numero y carracter especial ");
-        }
-
-    }
-
-    public void activar(int id) {
-        Optional<Usuario> usuario = usuarioDAO.findById(Long.valueOf(id));
-
-        if (usuario.isEmpty()) {
-            throw new RuntimeException("El usuario no esta asignado ni como cliente o empleado");
-        }
-
-        Usuario user = usuario.get();
-        user.setEstado(Estado.ACTIVO);
-        usuarioDAO.save(user);
-    }
-
-    public void enviarEmail(Usuario usuario) {
+    private void setEmailRegistrar(Usuario usuario) {
         Email correo = new Email("mz2458594@gmail.com", usuario.getEmail(),
                 "Registrar cuenta",
                 usuario.getUsername(),
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
 
-        emailService.sendEmailRegistrar(correo, usuario.getIdUsuario());
+        // emailService.sendEmailRegistrar(correo, usuario.getIdUsuario());
     }
 
-    public void emailContraseña(String email) {
+    private void setEmailPassword(String email) {
         Optional<Usuario> usuario = usuarioDAO.findByEmail(email);
 
         if (usuario.isEmpty()) {
@@ -249,28 +235,10 @@ public class UsuarioService {
 
         Usuario user = usuario.get();
 
-        Email correo = new Email("mz2458594@gmail.com", email, "Recuperar Contraseña", user.getUsername(),
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
-        emailService.sendEmailTemplate(correo, user.getIdUsuario());
-    }
-
-    public void actualizarContraseña(String contraseña, int id_usuario) {
-
-        Usuario usuario = usuarioDAO.findById(Long.valueOf(id_usuario))
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id_usuario));
-
-        usuario.setPassword(new BCryptPasswordEncoder().encode(contraseña));
-
-        usuarioDAO.save(usuario);
-
-    }
-
-    public boolean emailExists(String email){
-        return usuarioDAO.findByEmail(email).isPresent();
-    }
-
-    public boolean usernameExists(String username){
-        return usuarioDAO.findByUsername(username).isPresent();
+        // Email correo = new Email("mz2458594@gmail.com", email, "Recuperar
+        // Contraseña", user.getUsername(),
+        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+        // emailService.sendEmailTemplate(correo, user.getIdUsuario());
     }
 
 }
