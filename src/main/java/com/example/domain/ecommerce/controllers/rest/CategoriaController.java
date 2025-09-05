@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.domain.ecommerce.dto.CategoriaDTO;
+import com.example.domain.ecommerce.dto.request.CategoriaRequest;
 import com.example.domain.ecommerce.models.entities.Categoria;
 import com.example.domain.ecommerce.services.CategoriaService;
 
@@ -27,13 +27,13 @@ public class CategoriaController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Categoria> createCategoria(@RequestBody CategoriaDTO categoriaDTO){
+    public ResponseEntity<Categoria> createCategoria(@RequestBody CategoriaRequest categoriaDTO){
         Categoria categoria = categoriaService.createCategory(categoriaDTO);
         return ResponseEntity.status(201).body(categoria);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Categoria> updateProveedor(@RequestBody CategoriaDTO categoriaDTO, @PathVariable int id) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Categoria> updateProveedor(@RequestBody CategoriaRequest categoriaDTO, @PathVariable int id) {
         try {
             Categoria categoria = categoriaService.updateCategoria(categoriaDTO, id);
             return ResponseEntity.ok(categoria);
@@ -42,7 +42,7 @@ public class CategoriaController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCategoria(@PathVariable int id) {
         categoriaService.eliminarCategoria(id);
         return ResponseEntity.noContent().build();

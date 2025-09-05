@@ -1,21 +1,16 @@
 package com.example.domain.ecommerce.services;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.example.domain.ecommerce.dto.EstadoRequestDTO;
-import com.example.domain.ecommerce.dto.PedidoDTO;
 import com.example.domain.ecommerce.dto.PedidoFilterDTO;
 import com.example.domain.ecommerce.dto.RequestDTO;
 import com.example.domain.ecommerce.factories.PedidoProveedorFactory;
 import com.example.domain.ecommerce.factories.PedidoUsuarioFactory;
-import com.example.domain.ecommerce.models.entities.DetallePedido;
 import com.example.domain.ecommerce.models.entities.Empleado;
 import com.example.domain.ecommerce.models.entities.Pedido;
 import com.example.domain.ecommerce.models.entities.PedidoProveedor;
@@ -66,8 +61,8 @@ public class PedidoService {
     }
 
     @Transactional(readOnly = true)
-    public Pedido obtenerPedidoPorId(int id) {
-        Optional<Pedido> pedidos = pedidoDAO.findById(Long.valueOf(id));
+    public Pedido obtenerPedidoPorId(Long id) {
+        Optional<Pedido> pedidos = pedidoDAO.findById(id);
 
         if (pedidos.isEmpty()) {
             throw new RuntimeException("Pedido con id " + id + " no encontrado");
@@ -77,9 +72,9 @@ public class PedidoService {
     }
 
     @Transactional(readOnly = true)
-    public PedidoProveedor obtenerPedidoProveedorPorId(int id) {
+    public PedidoProveedor obtenerPedidoProveedorPorId(Long id) {
 
-        Optional<PedidoProveedor> pedido = pedidoProveedorDAO.findById(Long.valueOf(id));
+        Optional<PedidoProveedor> pedido = pedidoProveedorDAO.findById(id);
 
         if (pedido.isEmpty()) {
             throw new EntityNotFoundException("Pedido con id " + id + " no encontrado");
@@ -89,8 +84,8 @@ public class PedidoService {
     }
 
     @Transactional(readOnly = true)
-    public PedidoUsuario obtenerPedidoUsuarioPorId(int id) {
-        Optional<PedidoUsuario> pedido = pedidoUsuarioDAO.findById((Long.valueOf(id)));
+    public PedidoUsuario obtenerPedidoUsuarioPorId(Long id) {
+        Optional<PedidoUsuario> pedido = pedidoUsuarioDAO.findById(id);
         if (pedido.isEmpty()) {
             throw new EntityNotFoundException("Pedido con id " + id + " no encontrado");
         }
@@ -99,8 +94,8 @@ public class PedidoService {
     }
 
     @Transactional(readOnly = true)
-    public List<PedidoUsuario> getPedidosUsuarioPorIdUsuario(int idUsuario) {
-        List<PedidoUsuario> pedidos = pedidoUsuarioDAO.obtenerPedidosPorIdUsuario(Long.valueOf(idUsuario));
+    public List<PedidoUsuario> getPedidosUsuarioPorIdUsuario(Long idUsuario) {
+        List<PedidoUsuario> pedidos = pedidoUsuarioDAO.obtenerPedidosPorIdUsuario(idUsuario);
 
         if (pedidos.isEmpty()) {
             throw new RuntimeException("No se encontro pedidos para el usuario con ID: " + idUsuario);
@@ -119,8 +114,8 @@ public class PedidoService {
     }
 
     @Transactional
-    public void deletePedido(int id) {
-        Optional<PedidoProveedor> pedido = pedidoProveedorDAO.findById(Long.valueOf(id));
+    public void deletePedido(Long id) {
+        Optional<PedidoProveedor> pedido = pedidoProveedorDAO.findById(id);
 
         if (pedido.isEmpty()) {
             throw new EntityNotFoundException("Pedido con id " + id + " no encontrado");
@@ -131,12 +126,12 @@ public class PedidoService {
     }
 
     @Transactional
-    public void actualizarEstadoProveedor(int id, EstadoRequestDTO estadoRequestDTO) {
+    public void actualizarEstadoProveedor(Long id, EstadoRequestDTO estadoRequestDTO) {
         pedidoProveedorFactory.actualizarEstado(id, estadoRequestDTO);
     }
 
     @Transactional
-    public void actualizarEstadoUsuario(int id, EstadoRequestDTO estadoRequestDTO) {
+    public void actualizarEstadoUsuario(Long id, EstadoRequestDTO estadoRequestDTO) {
         pedidoUsuarioFactory.actualizarEstado(id, estadoRequestDTO);
     }
 

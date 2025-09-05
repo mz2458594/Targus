@@ -118,7 +118,7 @@ public class AuthService {
     }
 
     @Transactional
-    public Persona update(UserDTO userDTO, int id) {
+    public Persona update(UserDTO userDTO, Long id) {
         Usuario usuario = usuarioService.actualizarUsuarios(userDTO, id);
 
         return personaService.actualizarPersona(userDTO, usuario);

@@ -1,7 +1,7 @@
 package com.example.domain.ecommerce.controllers.rest;
 
 import com.example.domain.ecommerce.dto.ProductFilterDTO;
-import com.example.domain.ecommerce.dto.ProductRequest;
+import com.example.domain.ecommerce.dto.request.ProductRequest;
 import com.example.domain.ecommerce.models.entities.Producto;
 import com.example.domain.ecommerce.services.ProductoService;
 import jakarta.validation.Valid;
@@ -28,6 +28,16 @@ public class ProductController {
         return ResponseEntity.ok(productosService.obtenerProductoPorId(id));
     }
 
+    @GetMapping("/actives")
+    public ResponseEntity<List<Producto>> getActiveProducts(){
+        return ResponseEntity.ok(productosService.obtenerProductosActivos());
+    }
+
+    @GetMapping("/lowStock")
+    public ResponseEntity<List<Producto>> getLowStock(){
+        return ResponseEntity.ok(productosService.obtenerStockBajo());
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Producto> createProduct(@RequestBody ProductRequest productDTO) {
 
@@ -36,21 +46,28 @@ public class ProductController {
         return ResponseEntity.status(201).body(producto);
     }
 
+    @PostMapping("/filter")
+    public ResponseEntity<List<Producto>> getProductFilter(@RequestBody ProductFilterDTO productFilterDTO){
+        return ResponseEntity.ok(productosService.obtenerProductosConFiltro(productFilterDTO));
+    } 
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Producto> updateProduct(@RequestBody @Valid ProductRequest productDTO, @PathVariable Long id) {
         Producto producto = productosService.actualizarProducto(productDTO, id);
         return ResponseEntity.ok(producto);
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/stock/{id}")
+    public ResponseEntity<String> updateStockProduct(@PathVariable Long id, @RequestBody int quantity){
+        productosService.actualizarStock(id, quantity);
+        return ResponseEntity.status(200).build();
+    }
+
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable int id) {
         productosService.eliminarProducto(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/filter")
-    public ResponseEntity<List<Producto>> getProductFilter(@RequestBody ProductFilterDTO productFilterDTO){
-        return ResponseEntity.ok(productosService.obtenerProductosConFiltro(productFilterDTO));
-    } 
 
 }

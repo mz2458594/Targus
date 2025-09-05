@@ -1,4 +1,4 @@
-package com.example.domain.ecommerce.dto;
+package com.example.domain.ecommerce.dto.request;
 
 import java.util.Map;
 

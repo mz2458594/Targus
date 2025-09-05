@@ -122,8 +122,8 @@ public class PedidoUsuarioFactory implements PedidoFactory {
     }
 
     @Override
-    public void actualizarEstado(int id, EstadoRequestDTO estadoRequestDTO) {
-        PedidoUsuario pedido = pedidoUsuarioDAO.findById(Long.valueOf(id))
+    public void actualizarEstado(Long id, EstadoRequestDTO estadoRequestDTO) {
+        PedidoUsuario pedido = pedidoUsuarioDAO.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido con id " + id + " no encontrado"));
 
         EstadoPedido nuevoEstado = EstadoPedido.valueOf(estadoRequestDTO.getEstado());
@@ -143,7 +143,7 @@ public class PedidoUsuarioFactory implements PedidoFactory {
 
         pedidoUsuarioDAO.save(pedido);
 
-        crearEmail(pedido);
+        // crearEmail(pedido);
 
     }
 

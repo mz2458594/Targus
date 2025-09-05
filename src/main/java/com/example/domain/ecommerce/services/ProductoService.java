@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import com.example.domain.ecommerce.dto.ProductFilterDTO;
-import com.example.domain.ecommerce.dto.ProductRequest;
+import com.example.domain.ecommerce.dto.request.ProductRequest;
 import com.example.domain.ecommerce.models.entities.Categoria;
 import com.example.domain.ecommerce.models.entities.Producto;
 import com.example.domain.ecommerce.models.entities.Proveedor;
@@ -30,10 +30,6 @@ public class ProductoService {
 
     private final ProveedorDAO proveedorDAO;
 
-    public List<Categoria> obtenerCategorias() {
-        return categoriaDAO.findAll();
-    }
-
     @Transactional(readOnly = true)
     public List<Producto> listarProducto() {
         return (List<Producto>) productoDAO.findAll();
@@ -48,6 +44,17 @@ public class ProductoService {
         }
 
         return producto.get();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> obtenerProductosActivos() {
+        List<Producto> activos = new ArrayList<>();
+        for (Producto producto : productoDAO.findAll()) {
+            if (producto.getEstado().equals(Estado.ACTIVO)) {
+                activos.add(producto);
+            }
+        }
+        return activos;
     }
 
     @Transactional
@@ -149,33 +156,16 @@ public class ProductoService {
 
     }
 
-    @Transactional(readOnly = true)
-    public List<Producto> obtenerProductosActivos() {
-        List<Producto> activos = new ArrayList<>();
-        for (Producto producto : productoDAO.findAll()) {
-            if (producto.getEstado().equals(Estado.ACTIVO)) {
-                activos.add(producto);
-            }
-        }
-        return activos;
-    }
-
     @Transactional
     public void eliminarProducto(int id) {
         productoDAO.deleteById(Long.valueOf(id));
     }
 
     @Transactional
-    public void actualizarStockProducto(Producto producto, int cantidad) {
-        Producto product = producto;
-        product.setStock(String.valueOf(Integer.valueOf(product.getStock()) - cantidad));
-        productoDAO.save(product);
-    }
-
-    @Transactional
-    public void aumentarStock(Producto producto, int cantidad) {
-        Producto product = producto;
-        product.setStock(String.valueOf(Integer.valueOf(product.getStock()) + cantidad));
+    public void actualizarStock(Long idProducto, int cantidad) {
+        Producto product = productoDAO.findById(idProducto)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        product.setStock(String.valueOf(Integer.valueOf(cantidad)));
         productoDAO.save(product);
     }
 

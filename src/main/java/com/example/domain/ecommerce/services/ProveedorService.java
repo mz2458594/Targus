@@ -24,7 +24,7 @@ public class ProveedorService {
     private final ProveedorDAO proveedorDAO;
 
     @Transactional(readOnly = true)
-    public Iterable<Proveedor> obtenerProveedores() {
+    public List<Proveedor> obtenerProveedores() {
         return proveedorDAO.findAll();
     }
 
@@ -39,8 +39,25 @@ public class ProveedorService {
         return activos;
     }
 
+    public boolean nombreExists(String nombre){
+        return proveedorDAO.findByNombre(nombre).isPresent();
+    }
+
+    public boolean emailExists(String email){
+        return proveedorDAO.findByEmail(email).isPresent();
+    }
+
+    public boolean rucExists(String ruc){
+        return proveedorDAO.findByRuc(Long.valueOf(ruc)).isPresent();
+    }
+
+    public boolean telefonoExists(String telefono){
+        return proveedorDAO.findByTelefono(Integer.parseInt(telefono)).isPresent();
+    }
+
+
     @Transactional
-    public void createProv(ProveedorDTO proveedorDTO) {
+    public Proveedor createProv(ProveedorDTO proveedorDTO) {
         Proveedor nuevo_proveedor = new Proveedor();
         nuevo_proveedor.setRuc(proveedorDTO.getRuc());
         nuevo_proveedor.setNombre(proveedorDTO.getNombre());
@@ -48,14 +65,14 @@ public class ProveedorService {
         nuevo_proveedor.setTelefono(proveedorDTO.getTelefono());
         nuevo_proveedor.setEstado(Estado.ACTIVO);
 
-        proveedorDAO.save(nuevo_proveedor);
+        return proveedorDAO.save(nuevo_proveedor);
 
     }
 
     @Transactional
-    public void updateProv(ProveedorDTO proveedorDTO, int id) {
+    public Proveedor updateProv(ProveedorDTO proveedorDTO, Long id) {
 
-        Optional<Proveedor> prov = proveedorDAO.findById(Long.valueOf(id));
+        Optional<Proveedor> prov = proveedorDAO.findById(id);
 
         if (prov.isEmpty()) {
             throw new EntityNotFoundException("Usuario con id " + id + " no encontrado");
@@ -77,28 +94,11 @@ public class ProveedorService {
             }
         }
 
-        proveedorDAO.save(proveedor);
+        return proveedorDAO.save(proveedor);
     }
 
     @Transactional
-    public void eliminarProveedor(int id) {
-        proveedorDAO.deleteById(Long.valueOf(id));
+    public void eliminarProveedor(Long id) {
+        proveedorDAO.deleteById(id);
     }
-
-    public boolean nombreExists(String nombre){
-        return proveedorDAO.findByNombre(nombre).isPresent();
-    }
-
-    public boolean emailExists(String email){
-        return proveedorDAO.findByEmail(email).isPresent();
-    }
-
-    public boolean rucExists(String ruc){
-        return proveedorDAO.findByRuc(Long.valueOf(ruc)).isPresent();
-    }
-
-    public boolean telefonoExists(String telefono){
-        return proveedorDAO.findByTelefono(Integer.parseInt(telefono)).isPresent();
-    }
-
 }

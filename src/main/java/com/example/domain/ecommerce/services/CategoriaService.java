@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.domain.ecommerce.dto.CategoriaDTO;
+import com.example.domain.ecommerce.dto.request.CategoriaRequest;
 import com.example.domain.ecommerce.models.entities.Categoria;
 import com.example.domain.ecommerce.repositories.CategoriaDAO;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,7 +24,7 @@ public class CategoriaService {
     }
 
     @Transactional
-    public Categoria createCategory(CategoriaDTO categoriaDTO) {
+    public Categoria createCategory(CategoriaRequest categoriaDTO) {
         Categoria nueva_categoria = new Categoria();
         nueva_categoria.setNombre(categoriaDTO.getNombre());
         nueva_categoria.setDescripcion(categoriaDTO.getDescripcion());
@@ -35,7 +35,7 @@ public class CategoriaService {
     }
 
     @Transactional
-    public Categoria updateCategoria(CategoriaDTO cate, int id) {
+    public Categoria updateCategoria(CategoriaRequest cate, int id) {
 
         Optional<Categoria> cat = categoriaDAO.findById(Long.valueOf(id));
 

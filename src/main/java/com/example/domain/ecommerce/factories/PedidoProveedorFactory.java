@@ -89,8 +89,8 @@ public class PedidoProveedorFactory implements PedidoFactory {
     }
 
     @Override
-    public void actualizarEstado(int id, EstadoRequestDTO estadoRequestDTO) {
-        PedidoProveedor pedido = pedidoProveedorDAO.findById(Long.valueOf(id))
+    public void actualizarEstado(Long id, EstadoRequestDTO estadoRequestDTO) {
+        PedidoProveedor pedido = pedidoProveedorDAO.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido con id " + id + " no encontrado"));
 
         EstadoPedido nuevoEstado = EstadoPedido.valueOf(estadoRequestDTO.getEstado());
@@ -104,9 +104,10 @@ public class PedidoProveedorFactory implements PedidoFactory {
         } else if (nuevoEstado.ordinal() > pedido.getEstado().ordinal()) {
             if (nuevoEstado.equals(EstadoPedido.ENTREGADO)) {
                 for (DetallePedido pe : pedido.getDetallePedidos()) {
-                    productosService.aumentarStock(pe.getProducto(), pe.getCantidad());
+                    productosService.actualizarStock(pe.getProducto().getIdProducto(),
+                            Integer.valueOf(pe.getProducto().getStock()) + pe.getCantidad());
                 }
-            } else if (nuevoEstado.equals(EstadoPedido.CANCELADO)){
+            } else if (nuevoEstado.equals(EstadoPedido.CANCELADO)) {
                 pedido.setComentario(estadoRequestDTO.getMotivoCancelado());
             }
             pedido.setEstado(nuevoEstado);
